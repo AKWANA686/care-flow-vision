@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Play, Shield, Zap, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Play, Shield, Zap, Users, Lock } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -21,7 +22,7 @@ const Hero = () => {
           <div className="animate-slide-up">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-6">
               <Zap className="w-4 h-4 mr-2" />
-              AI-Powered Healthcare Platform
+              HIPAA Compliant Healthcare Platform
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
@@ -36,34 +37,40 @@ const Hero = () => {
             </p>
 
             {/* Key Benefits */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="text-center">
-                <div className="bg-blue-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                  <Shield className="w-6 h-6 text-blue-600" />
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="flex items-center">
+                <div className="bg-blue-100 w-10 h-10 rounded-xl flex items-center justify-center mr-3">
+                  <Shield className="w-5 h-5 text-blue-600" />
                 </div>
                 <p className="text-sm font-medium text-gray-700">HIPAA Compliant</p>
               </div>
-              <div className="text-center">
-                <div className="bg-green-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                  <Zap className="w-6 h-6 text-green-600" />
+              <div className="flex items-center">
+                <div className="bg-green-100 w-10 h-10 rounded-xl flex items-center justify-center mr-3">
+                  <Lock className="w-5 h-5 text-green-600" />
                 </div>
-                <p className="text-sm font-medium text-gray-700">Real-time AI</p>
+                <p className="text-sm font-medium text-gray-700">Secure Authentication</p>
               </div>
-              <div className="text-center">
-                <div className="bg-purple-100 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-2">
-                  <Users className="w-6 h-6 text-purple-600" />
+              <div className="flex items-center">
+                <div className="bg-purple-100 w-10 h-10 rounded-xl flex items-center justify-center mr-3">
+                  <Users className="w-5 h-5 text-purple-600" />
                 </div>
-                <p className="text-sm font-medium text-gray-700">Multi-channel</p>
+                <p className="text-sm font-medium text-gray-700">Dual-Role Access</p>
+              </div>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-10 h-10 rounded-xl flex items-center justify-center mr-3">
+                  <Zap className="w-5 h-5 text-orange-600" />
+                </div>
+                <p className="text-sm font-medium text-gray-700">AI-Powered Insights</p>
               </div>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button 
                 size="lg" 
                 className="medical-gradient text-white hover:opacity-90 transition-all duration-300 transform hover:scale-105"
               >
-                Start Free Trial
+                <span>Start Free Trial</span>
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button 
@@ -74,6 +81,19 @@ const Hero = () => {
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </Button>
+            </div>
+
+            {/* User Type Badges */}
+            <div className="flex flex-wrap gap-3">
+              <Badge variant="outline" className="border-2 border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100">
+                For Doctors
+              </Badge>
+              <Badge variant="outline" className="border-2 border-green-200 bg-green-50 text-green-700 hover:bg-green-100">
+                For Patients
+              </Badge>
+              <Badge variant="outline" className="border-2 border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100">
+                For Healthcare Systems
+              </Badge>
             </div>
 
             {/* Social Proof */}
@@ -129,18 +149,27 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Floating Cards */}
-              <div className="absolute -top-4 -right-4 glass-effect rounded-xl p-4 shadow-lg animate-float">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <p className="text-sm font-medium">Live Monitoring</p>
+              {/* Login Card */}
+              <div className="absolute -top-10 -right-10 glass-effect rounded-xl p-4 shadow-lg animate-float bg-white/90 border border-blue-100 w-64">
+                <h4 className="font-medium text-sm mb-2 text-blue-800">Dual-Role Login System</h4>
+                <div className="space-y-2">
+                  <div className="bg-blue-50 rounded p-2 text-xs flex items-center">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                    <span>Doctor Portal Access</span>
+                  </div>
+                  <div className="bg-green-50 rounded p-2 text-xs flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    <span>Patient Portal Access</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 glass-effect rounded-xl p-4 shadow-lg animate-float" style={{ animationDelay: '2s' }}>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                  <p className="text-sm font-medium">AI Predictions</p>
+              {/* Subscription Card */}
+              <div className="absolute -bottom-6 -left-6 glass-effect rounded-xl p-4 shadow-lg animate-float bg-white/90 border border-green-100" style={{ animationDelay: '3s' }}>
+                <h4 className="font-medium text-sm mb-2 text-green-800">Subscription Plans</h4>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-600">Free Tier Available</span>
+                  <Badge className="bg-green-500">New</Badge>
                 </div>
               </div>
             </div>
