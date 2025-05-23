@@ -7,6 +7,7 @@ import Pricing from '@/components/Pricing';
 import Footer from '@/components/Footer';
 import Testimonials from '@/components/Testimonials';
 import ContactSection from '@/components/ContactSection';
+import ChatBot from '@/components/ChatBot';
 
 const Index = () => {
   return (
@@ -19,6 +20,7 @@ const Index = () => {
       <Pricing />
       <ContactSection />
       <Footer />
+      <ChatBot userType="patient" userName="Guest" />
     </div>
   );
 };
