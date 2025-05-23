@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -16,6 +15,21 @@ interface Message {
 interface ChatBotProps {
   userType?: 'patient' | 'doctor';
   userName?: string;
+}
+
+interface DoctorResponses {
+  greeting: string[];
+  patients: string[];
+  schedule: string[];
+  default: string[];
+}
+
+interface PatientResponses {
+  greeting: string[];
+  appointments: string[];
+  symptoms: string[];
+  medications: string[];
+  default: string[];
 }
 
 const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
@@ -38,7 +52,7 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
     const message = userMessage.toLowerCase();
     
     // Jarvis-like responses for doctors
-    const doctorResponses = {
+    const doctorResponses: DoctorResponses = {
       greeting: [
         `Good ${getTimeOfDay()}, Dr. ${userName}. I am ARIA - your Adaptive Response Intelligence Assistant. How may I assist you in your medical practice today?`,
         `Welcome back, Dr. ${userName}. ARIA at your service. Shall we review your patient queue or would you prefer to discuss a specific case?`,
@@ -52,17 +66,17 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
       schedule: [
         "Your schedule optimization algorithm suggests rearranging appointments 3 and 5 for maximum efficiency. Shall I implement these changes?",
         "I have blocked 30 minutes for emergency consultations based on historical data patterns.",
-        "Dr. ${userName}, your next patient has a complex medical history. Pulling relevant case files now."
+        `Dr. ${userName}, your next patient has a complex medical history. Pulling relevant case files now.`
       ],
       default: [
-        "I'm processing your request, Dr. ${userName}. Could you provide more specific parameters?",
+        `I'm processing your request, Dr. ${userName}. Could you provide more specific parameters?`,
         "My medical knowledge database is at your disposal. How may I assist with your clinical decision-making?",
         "I am continuously learning from our interactions to better serve your practice, Doctor."
       ]
     };
 
     // Jarvis-like responses for patients
-    const patientResponses = {
+    const patientResponses: PatientResponses = {
       greeting: [
         `Hello ${userName}. I am ARIA, your personal health companion. Think of me as your medical assistant - always here to help you stay on track with your health journey.`,
         `Welcome to CareFlow Vision, ${userName}. I'm ARIA, designed to make your healthcare experience seamless. How may I assist you today?`,
@@ -90,32 +104,30 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
       ]
     };
 
-    const responses = userType === 'doctor' ? doctorResponses : patientResponses;
-
     if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-      return getRandomResponse(responses.greeting);
+      return getRandomResponse(userType === 'doctor' ? doctorResponses.greeting : patientResponses.greeting);
     }
     
     if (userType === 'doctor') {
       if (message.includes('patient') || message.includes('case')) {
-        return getRandomResponse(responses.patients);
+        return getRandomResponse(doctorResponses.patients);
       }
       if (message.includes('schedule') || message.includes('appointment')) {
-        return getRandomResponse(responses.schedule);
+        return getRandomResponse(doctorResponses.schedule);
       }
+      return getRandomResponse(doctorResponses.default);
     } else {
       if (message.includes('appointment') || message.includes('schedule')) {
-        return getRandomResponse(responses.appointments);
+        return getRandomResponse(patientResponses.appointments);
       }
       if (message.includes('symptom') || message.includes('pain') || message.includes('feel')) {
-        return getRandomResponse(responses.symptoms);
+        return getRandomResponse(patientResponses.symptoms);
       }
       if (message.includes('medication') || message.includes('pill') || message.includes('medicine')) {
-        return getRandomResponse(responses.medications);
+        return getRandomResponse(patientResponses.medications);
       }
+      return getRandomResponse(patientResponses.default);
     }
-    
-    return getRandomResponse(responses.default);
   };
 
   const getRandomResponse = (responses: string[]) => {

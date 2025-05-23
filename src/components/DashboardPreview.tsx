@@ -2,6 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import VitalSignsChart from '@/components/VitalSignsChart';
 import { 
   Users, 
   Calendar, 
@@ -43,6 +44,11 @@ const DashboardPreview = () => {
             Get real-time insights into patient health, track follow-up compliance, 
             and make data-driven decisions with our comprehensive dashboard.
           </p>
+        </div>
+
+        {/* Real-time Vital Signs Chart */}
+        <div className="mb-12 animate-slide-up">
+          <VitalSignsChart />
         </div>
 
         {/* Dashboard Layout */}
