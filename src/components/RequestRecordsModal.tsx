@@ -39,6 +39,7 @@ const RequestRecordsModal = ({ isOpen, onClose, patientId }: RequestRecordsModal
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (selectedRecords.length === 0) {
       toast({
         title: "Error",
@@ -48,33 +49,73 @@ const RequestRecordsModal = ({ isOpen, onClose, patientId }: RequestRecordsModal
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // For now, we'll store the record request as a medical record with a special title
-      // This is a temporary solution until the record_requests table is properly reflected in types
-      const { error } = await supabase
-        .from('medical_records')
-        .insert({
-          patient_id: patientId,
-          title: `Record Request: ${selectedRecords.join(', ')}`,
-          description: `Patient requested the following records: ${selectedRecords.join(', ')}. Additional message: ${message || 'None'}`,
-          diagnosis: 'RECORD_REQUEST', // Special marker to identify record requests
-        });
+    if (!patientId) {
+      toast({
+        title: "Error", 
+        description: "Patient ID is missing. Please log in again.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-      if (error) throw error;
+    setIsLoading(true);
+    
+    try {
+      console.log('Submitting record request with:', {
+        patientId,
+        selectedRecords,
+        message: message || 'No additional message'
+      });
+
+      // Store the record request as a medical record with clear identifiers
+      const recordRequestData = {
+        patient_id: patientId,
+        title: `Record Request: ${selectedRecords.map(id => 
+          recordTypes.find(type => type.id === id)?.label || id
+        ).join(', ')}`,
+        description: `Patient requested the following records: ${selectedRecords.map(id => 
+          recordTypes.find(type => type.id === id)?.label || id
+        ).join(', ')}${message ? `. Additional message: ${message}` : ''}`,
+        diagnosis: 'RECORD_REQUEST'
+      };
+
+      console.log('Inserting record request data:', recordRequestData);
+
+      const { data, error } = await supabase
+        .from('medical_records')
+        .insert(recordRequestData)
+        .select();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Record request submitted successfully:', data);
 
       toast({
         title: "Success",
         description: "Record request submitted successfully! You'll receive your records within 3-5 business days."
       });
-      onClose();
+      
+      // Reset form and close modal
       setSelectedRecords([]);
       setMessage('');
+      onClose();
+      
     } catch (error) {
       console.error('Error requesting records:', error);
+      
+      // More specific error handling
+      let errorMessage = "Failed to submit record request. Please try again.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = `Error: ${error.message}`;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to submit record request. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -82,8 +123,14 @@ const RequestRecordsModal = ({ isOpen, onClose, patientId }: RequestRecordsModal
     }
   };
 
+  const handleClose = () => {
+    setSelectedRecords([]);
+    setMessage('');
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Request Medical Records</DialogTitle>
@@ -122,10 +169,10 @@ const RequestRecordsModal = ({ isOpen, onClose, patientId }: RequestRecordsModal
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={isLoading || selectedRecords.length === 0} className="flex-1">
               {isLoading ? 'Submitting...' : 'Submit Request'}
             </Button>
           </div>
