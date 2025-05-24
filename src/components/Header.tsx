@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Activity, Menu, X, UserPlus, LogIn, User, Stethoscope } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +18,12 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="medical-gradient p-2 rounded-xl">
               <Activity className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-bold text-gradient">CareFlow Vision</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -43,13 +44,17 @@ const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem className="cursor-pointer flex items-center">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Patient Login</span>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/login" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Patient Login</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer flex items-center">
-                  <Stethoscope className="mr-2 h-4 w-4" />
-                  <span>Doctor Login</span>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/login" className="flex items-center w-full">
+                    <Stethoscope className="mr-2 h-4 w-4" />
+                    <span>Doctor Login</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -62,13 +67,17 @@ const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem className="cursor-pointer flex items-center">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Patient Registration</span>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/register" className="flex items-center w-full">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Patient Registration</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer flex items-center">
-                  <Stethoscope className="mr-2 h-4 w-4" />
-                  <span>Doctor Registration</span>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link to="/register" className="flex items-center w-full">
+                    <Stethoscope className="mr-2 h-4 w-4" />
+                    <span>Doctor Registration</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -92,17 +101,23 @@ const Header = () => {
             <a href="#pricing" className="block text-gray-600 hover:text-primary transition-colors">Pricing</a>
             <a href="#contact" className="block text-gray-600 hover:text-primary transition-colors">Contact</a>
             <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
-              <Button variant="outline" className="flex items-center justify-center">
-                <LogIn className="h-4 w-4 mr-2" />
-                <span>Patient Login</span>
+              <Button variant="outline" asChild>
+                <Link to="/login" className="flex items-center justify-center">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  <span>Patient Login</span>
+                </Link>
               </Button>
-              <Button variant="outline" className="flex items-center justify-center">
-                <LogIn className="h-4 w-4 mr-2" />
-                <span>Doctor Login</span>
+              <Button variant="outline" asChild>
+                <Link to="/login" className="flex items-center justify-center">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  <span>Doctor Login</span>
+                </Link>
               </Button>
-              <Button className="medical-gradient text-white hover:opacity-90 transition-opacity">
-                <UserPlus className="h-4 w-4 mr-2" />
-                <span>Register</span>
+              <Button className="medical-gradient text-white hover:opacity-90 transition-opacity" asChild>
+                <Link to="/register" className="flex items-center justify-center">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  <span>Register</span>
+                </Link>
               </Button>
             </div>
           </div>
