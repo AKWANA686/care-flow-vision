@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +17,9 @@ import {
   Phone,
   Download
 } from 'lucide-react';
+import BookAppointmentModal from '@/components/BookAppointmentModal';
+import RequestRecordsModal from '@/components/RequestRecordsModal';
+import DownloadReportsModal from '@/components/DownloadReportsModal';
 
 const PatientDashboard = () => {
   const navigate = useNavigate();
@@ -29,6 +31,11 @@ const PatientDashboard = () => {
     lastVisit: '2024-01-08',
     doctor: 'Dr. Sarah Johnson'
   });
+
+  // Modal states
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isRecordsModalOpen, setIsRecordsModalOpen] = useState(false);
+  const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
 
   useEffect(() => {
     const userType = localStorage.getItem('userType');
@@ -149,15 +156,24 @@ const PatientDashboard = () => {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start bg-blue-50 text-blue-700 hover:bg-blue-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-blue-50 text-blue-700 hover:bg-blue-100 border-0"
+                  onClick={() => setIsBookingModalOpen(true)}
+                >
                   <Calendar className="w-4 h-4 mr-2" />
                   Book Appointment
                 </Button>
-                <Button className="w-full justify-start bg-green-50 text-green-700 hover:bg-green-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-green-50 text-green-700 hover:bg-green-100 border-0"
+                  onClick={() => setIsRecordsModalOpen(true)}
+                >
                   <FileText className="w-4 h-4 mr-2" />
                   Request Records
                 </Button>
-                <Button className="w-full justify-start bg-purple-50 text-purple-700 hover:bg-purple-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-purple-50 text-purple-700 hover:bg-purple-100 border-0"
+                  onClick={() => setIsReportsModalOpen(true)}
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Download Reports
                 </Button>
@@ -306,6 +322,23 @@ const PatientDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <BookAppointmentModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        patientId={patientData.patientId}
+      />
+      <RequestRecordsModal
+        isOpen={isRecordsModalOpen}
+        onClose={() => setIsRecordsModalOpen(false)}
+        patientId={patientData.patientId}
+      />
+      <DownloadReportsModal
+        isOpen={isReportsModalOpen}
+        onClose={() => setIsReportsModalOpen(false)}
+        patientId={patientData.patientId}
+      />
     </div>
   );
 };
