@@ -50,13 +50,15 @@ const RequestRecordsModal = ({ isOpen, onClose, patientId }: RequestRecordsModal
 
     setIsLoading(true);
     try {
+      // For now, we'll store the record request as a medical record with a special title
+      // This is a temporary solution until the record_requests table is properly reflected in types
       const { error } = await supabase
-        .from('record_requests')
+        .from('medical_records')
         .insert({
           patient_id: patientId,
-          request_type: selectedRecords.join(', '),
-          message,
-          status: 'pending'
+          title: `Record Request: ${selectedRecords.join(', ')}`,
+          description: `Patient requested the following records: ${selectedRecords.join(', ')}. Additional message: ${message || 'None'}`,
+          diagnosis: 'RECORD_REQUEST', // Special marker to identify record requests
         });
 
       if (error) throw error;
