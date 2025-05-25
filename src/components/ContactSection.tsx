@@ -103,7 +103,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-gray-800 font-medium">Call Us</p>
-                    <p className="text-blue-600">+1 (800) 123-4567</p>
+                    <p className="text-blue-600">+254 712354</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -112,7 +112,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-gray-800 font-medium">Visit Us</p>
-                    <p className="text-blue-600">123 Healthcare Avenue, San Francisco, CA 94107</p>
+                    <p className="text-blue-600">123 Healthcare Avenue, UPPERHILL, NBO 00100</p>
                   </div>
                 </div>
               </div>
