@@ -66,11 +66,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+                <span className="text-gray-400">+254 712354</span>
               </li>
               <li className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">San Francisco, CA</span>
+                <span className="text-gray-400">123 Healthcare Avenue, UPPERHILL, NBO 00100</span>
               </li>
             </ul>
             
@@ -94,7 +94,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 mb-4 md:mb-0">
-              © 2024 CareFlow Vision. All rights reserved.
+              © 2025 CareFlow Vision. All rights reserved.
             </div>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
