@@ -8,7 +8,7 @@ const Pricing = () => {
   const plans = [
     {
       name: "Starter",
-      price: "$299",
+      price: "Ksh. 2000",
       period: "/month",
       description: "Perfect for small practices and individual providers",
       icon: Zap,
@@ -26,7 +26,7 @@ const Pricing = () => {
     },
     {
       name: "Professional",
-      price: "$799",
+      price: "Ksh.6000",
       period: "/month",
       description: "Advanced features for growing healthcare organizations",
       icon: Star,
