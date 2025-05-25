@@ -5,6 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import VitalSignsChart from '@/components/VitalSignsChart';
+import CallPatientModal from '@/components/CallPatientModal';
+import SendMessageModal from '@/components/SendMessageModal';
+import SendReminderModal from '@/components/SendReminderModal';
+import ScheduleFollowupModal from '@/components/ScheduleFollowupModal';
 import { 
   Stethoscope, 
   Users, 
@@ -30,6 +34,12 @@ const DoctorDashboard = () => {
     email: '',
     licenseNumber: ''
   });
+
+  // Modal states
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const [isFollowupModalOpen, setIsFollowupModalOpen] = useState(false);
 
   useEffect(() => {
     const userType = localStorage.getItem('userType');
@@ -178,19 +188,31 @@ const DoctorDashboard = () => {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start bg-blue-50 text-blue-700 hover:bg-blue-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-blue-50 text-blue-700 hover:bg-blue-100 border-0"
+                  onClick={() => setIsCallModalOpen(true)}
+                >
                   <Phone className="w-4 h-4 mr-2" />
                   Call Patient
                 </Button>
-                <Button className="w-full justify-start bg-green-50 text-green-700 hover:bg-green-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-green-50 text-green-700 hover:bg-green-100 border-0"
+                  onClick={() => setIsMessageModalOpen(true)}
+                >
                   <MessageSquare className="w-4 h-4 mr-2" />
                   Send Message
                 </Button>
-                <Button className="w-full justify-start bg-purple-50 text-purple-700 hover:bg-purple-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-purple-50 text-purple-700 hover:bg-purple-100 border-0"
+                  onClick={() => setIsReminderModalOpen(true)}
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   Send Reminder
                 </Button>
-                <Button className="w-full justify-start bg-orange-50 text-orange-700 hover:bg-orange-100 border-0">
+                <Button 
+                  className="w-full justify-start bg-orange-50 text-orange-700 hover:bg-orange-100 border-0"
+                  onClick={() => setIsFollowupModalOpen(true)}
+                >
                   <Calendar className="w-4 h-4 mr-2" />
                   Schedule Follow-up
                 </Button>
@@ -371,6 +393,24 @@ const DoctorDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <CallPatientModal
+        isOpen={isCallModalOpen}
+        onClose={() => setIsCallModalOpen(false)}
+      />
+      <SendMessageModal
+        isOpen={isMessageModalOpen}
+        onClose={() => setIsMessageModalOpen(false)}
+      />
+      <SendReminderModal
+        isOpen={isReminderModalOpen}
+        onClose={() => setIsReminderModalOpen(false)}
+      />
+      <ScheduleFollowupModal
+        isOpen={isFollowupModalOpen}
+        onClose={() => setIsFollowupModalOpen(false)}
+      />
     </div>
   );
 };

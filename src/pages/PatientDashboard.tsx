@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,8 @@ import {
 import BookAppointmentModal from '@/components/BookAppointmentModal';
 import RequestRecordsModal from '@/components/RequestRecordsModal';
 import DownloadReportsModal from '@/components/DownloadReportsModal';
+import MessageDoctorModal from '@/components/MessageDoctorModal';
+import EmergencyContactModal from '@/components/EmergencyContactModal';
 
 const PatientDashboard = () => {
   const navigate = useNavigate();
@@ -36,6 +39,8 @@ const PatientDashboard = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isRecordsModalOpen, setIsRecordsModalOpen] = useState(false);
   const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
 
   useEffect(() => {
     const userType = localStorage.getItem('userType');
@@ -138,11 +143,19 @@ const PatientDashboard = () => {
                   <p className="font-medium">{patientData.lastVisit}</p>
                 </div>
                 <div className="pt-4 space-y-2">
-                  <Button className="w-full" variant="outline">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => setIsMessageModalOpen(true)}
+                  >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Message Doctor
                   </Button>
-                  <Button className="w-full" variant="outline">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => setIsEmergencyModalOpen(true)}
+                  >
                     <Phone className="w-4 h-4 mr-2" />
                     Emergency Contact
                   </Button>
@@ -338,6 +351,15 @@ const PatientDashboard = () => {
         isOpen={isReportsModalOpen}
         onClose={() => setIsReportsModalOpen(false)}
         patientId={patientData.patientId}
+      />
+      <MessageDoctorModal
+        isOpen={isMessageModalOpen}
+        onClose={() => setIsMessageModalOpen(false)}
+        patientId={patientData.patientId}
+      />
+      <EmergencyContactModal
+        isOpen={isEmergencyModalOpen}
+        onClose={() => setIsEmergencyModalOpen(false)}
       />
     </div>
   );
