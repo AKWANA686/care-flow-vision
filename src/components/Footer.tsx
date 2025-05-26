@@ -74,7 +74,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">123 Healthcare Avenue, UPPERHILL, NBO 00100</span>
+                <a href="https://www.google.com/maps/search/?api=1&query=123+Healthcare+Avenue,+UPPERHILL,+NBO+00100" target="_blank" 
+                  rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">123 Healthcare Avenue, UPPERHILL, NBO 00100</a>
               </li>
             </ul>
             
