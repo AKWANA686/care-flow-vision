@@ -5,19 +5,19 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Dr. Sarah Johnson",
+    name: "Dr. Sarah Kimani",
     role: "Cardiologist",
     avatar: "/placeholder.svg", 
     content: "CareFlow Vision has transformed how I manage patient follow-ups. The automated reminders have reduced our no-show rate by 67%, and the analytics dashboard gives me instant insights into patient compliance."
   },
   {
-    name: "Dr. Michael Chen",
+    name: "Dr. John Indiatsi",
     role: "Primary Care Physician",
     avatar: "/placeholder.svg",
     content: "As a physician with over 2,000 active patients, keeping track of follow-ups was overwhelming. CareFlow Vision streamlined our entire process, saving my staff 15+ hours per week on administrative tasks."
   },
   {
-    name: "Dr. Emily Rodriguez",
+    name: "Dr. Caleb Omondi",
     role: "Pediatrician",
     avatar: "/placeholder.svg",
     content: "The patient engagement tools are exceptional. Parents appreciate the reminders and educational resources, and I can see exactly who needs attention. Our practice saw a 45% improvement in treatment compliance."
