@@ -21,6 +21,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white p-2">
+                <a href="https://x.com/careflowvision" target="_blank" rel="noopener noreferrer"></a>
                 <Twitter className="w-5 h-5" />
               </Button>
               <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white p-2">
