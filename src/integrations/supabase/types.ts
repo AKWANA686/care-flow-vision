@@ -210,6 +210,51 @@ export type Database = {
         }
         Relationships: []
       }
+      transactions: {
+        Row: {
+          id: string
+          user_id: string
+          user_type: string
+          amount: number
+          plan: string
+          status: string
+          checkout_request_id: string
+          merchant_request_id: string | null
+          result_code: number | null
+          result_desc: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          user_type: string
+          amount: number
+          plan: string
+          status: string
+          checkout_request_id: string
+          merchant_request_id?: string | null
+          result_code?: number | null
+          result_desc?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          user_type?: string
+          amount?: number
+          plan?: string
+          status?: string
+          checkout_request_id?: string
+          merchant_request_id?: string | null
+          result_code?: number | null
+          result_desc?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
