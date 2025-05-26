@@ -60,6 +60,33 @@ export type Database = {
           },
         ]
       }
+      doctors: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: number
+          phone: string | null
+          speciality: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: number
+          phone?: string | null
+          speciality?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: number
+          phone?: string | null
+          speciality?: string | null
+        }
+        Relationships: []
+      }
       medical_records: {
         Row: {
           created_at: string
@@ -147,32 +174,41 @@ export type Database = {
         }
         Relationships: []
       }
-      doctors: {
+      subscribers: {
         Row: {
-          id: string;
-          full_name: string;
-          specialty: string;
-          email: string | null;
-          phone: string | null;
-          created_at: string;
-        };
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
         Insert: {
-          id?: string;
-          full_name: string;
-          specialty: string;
-          email?: string | null;
-          phone?: string | null;
-          created_at?: string;
-        };
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
         Update: {
-          id?: string;
-          full_name?: string;
-          specialty?: string;
-          email?: string | null;
-          phone?: string | null;
-          created_at?: string;
-        };
-        Relationships: [];
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
