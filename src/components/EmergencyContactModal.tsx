@@ -12,27 +12,21 @@ const EmergencyContactModal = ({ isOpen, onClose }: EmergencyContactModalProps) 
   const emergencyContacts = [
     {
       name: "Emergency Services",
-      phone: "911",
+      phone: "999 OR 112",
       description: "Life-threatening emergencies",
       available: "24/7"
     },
     {
-      name: "Hospital Emergency Room",
-      phone: "(555) 123-4567",
-      description: "St. Mary's General Hospital",
+      name: "St.John's Ambulance",
+      phone: " 0721225285",
+      description: "St. John's Ambulance Kenya",
       available: "24/7"
     },
     {
       name: "On-Call Doctor",
-      phone: "(555) 987-6543",
+      phone: "+254 79 876 5432",
       description: "After-hours medical consultation",
       available: "6 PM - 8 AM"
-    },
-    {
-      name: "Poison Control",
-      phone: "1-800-222-1222",
-      description: "Poison emergencies and questions",
-      available: "24/7"
     }
   ];
 
@@ -46,7 +40,7 @@ const EmergencyContactModal = ({ isOpen, onClose }: EmergencyContactModalProps) 
         <DialogHeader>
           <DialogTitle className="text-red-600">Emergency Contacts</DialogTitle>
           <DialogDescription>
-            Important emergency contact numbers. In case of a life-threatening emergency, call 911 immediately.
+            Important emergency contact numbers. In case of a life-threatening emergency, call 999 OR 112 immediately.
           </DialogDescription>
         </DialogHeader>
         
