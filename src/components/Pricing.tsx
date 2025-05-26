@@ -1,22 +1,30 @@
-
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Zap, Crown } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import {PaymentModal } from './PaymentModal';
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: string } | null>(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   const plans = [
     {
-      name: "Starter",
-      price: "Ksh. 2000",
+      name: "Nairobi Basic",
+      price: "Ksh. 2,000",
       period: "/month",
-      description: "Perfect for small practices and individual providers",
+      description: "Perfect for small clinics and individual practitioners in Nairobi",
       icon: Zap,
       popular: false,
       features: [
         "Up to 500 patients",
         "Basic follow-up automation",
-        "Email & SMS reminders",
+        "SMS & WhatsApp reminders",
         "Standard reporting",
         "Email support",
         "Mobile app access",
@@ -25,10 +33,10 @@ const Pricing = () => {
       ]
     },
     {
-      name: "Professional",
-      price: "Ksh.6000",
+      name: "Kenya Professional",
+      price: "Ksh. 6,000",
       period: "/month",
-      description: "Advanced features for growing healthcare organizations",
+      description: "Advanced features for growing healthcare facilities across Kenya",
       icon: Star,
       popular: true,
       features: [
@@ -45,10 +53,10 @@ const Pricing = () => {
       ]
     },
     {
-      name: "Enterprise",
+      name: "East Africa Enterprise",
       price: "Custom",
       period: "pricing",
-      description: "Comprehensive solution for large healthcare systems",
+      description: "Comprehensive solution for large healthcare systems in East Africa",
       icon: Crown,
       popular: false,
       features: [
@@ -68,6 +76,35 @@ const Pricing = () => {
     }
   ];
 
+  const handlePlanSelect = (plan: { name: string; price: string }) => {
+    const userType = localStorage.getItem('userType');
+    const userId = userType === 'patient'
+      ? localStorage.getItem('patientId')
+      : localStorage.getItem('licenseNumber');
+
+    if (!userType || !userId) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please log in to subscribe to a plan',
+        variant: 'destructive',
+      });
+      navigate('/login');
+      return;
+    }
+
+    if (plan.name === 'East Africa Enterprise') {
+      // Handle enterprise plan differently
+      toast({
+        title: 'Contact Sales',
+        description: 'Please contact our sales team for enterprise pricing',
+      });
+      return;
+    }
+
+    setSelectedPlan(plan);
+    setIsPaymentModalOpen(true);
+  };
+
   return (
     <section id="pricing" className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +115,7 @@ const Pricing = () => {
             <span className="text-gradient">Transparent Pricing</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose the perfect plan for your healthcare organization. 
+            Choose the perfect plan for your healthcare organization.
             All plans include our core features with no hidden fees.
           </p>
         </div>
@@ -86,7 +123,7 @@ const Pricing = () => {
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
-            <Card 
+            <Card
               key={index}
               className={`relative border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up ${
                 plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''
@@ -118,15 +155,16 @@ const Pricing = () => {
               </CardHeader>
 
               <CardContent className="space-y-6">
-                <Button 
+                <Button
                   className={`w-full ${
-                    plan.popular 
-                      ? 'medical-gradient text-white hover:opacity-90' 
+                    plan.popular
+                      ? 'medical-gradient text-white hover:opacity-90'
                       : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                   } transition-all duration-300`}
                   size="lg"
+                  onClick={() => handlePlanSelect({ name: plan.name, price: plan.price })}
                 >
-                  {plan.name === "Enterprise" ? "Contact Sales" : "Start Free Trial"}
+                  {plan.name === "East Africa Enterprise" ? "Contact Sales" : "Subscribe Now"}
                 </Button>
 
                 <div className="space-y-3">
@@ -151,7 +189,7 @@ const Pricing = () => {
             <h3 className="text-2xl font-bold mb-4">Return on Investment</h3>
             <p className="text-gray-600">Healthcare organizations using CareFlow Vision see measurable results</p>
           </div>
-          
+
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 mb-2">67%</div>
@@ -172,6 +210,24 @@ const Pricing = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {selectedPlan && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={() => {
+            setIsPaymentModalOpen(false);
+            setSelectedPlan(null);
+          }}
+          plan={selectedPlan}
+          onSuccess={() => {
+            toast({
+              title: 'Payment Successful',
+              description: 'Thank you for subscribing to CareFlow Vision!',
+            });
+          }}
+        />
+      )}
     </section>
   );
 };

@@ -1,0 +1,18 @@
+model Transaction {
+  id                String   @id @default(cuid())
+  userId            String
+  userType          String   // 'patient' or 'doctor'
+  amount            Float
+  plan              String
+  status            String   // 'pending', 'completed', 'failed'
+  checkoutRequestId String   @unique
+  merchantRequestId String?
+  resultCode        Int?
+  resultDesc        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+  @@index([checkoutRequestId])
+  @@index([status])
+}

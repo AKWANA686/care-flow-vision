@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,17 +26,33 @@ const BookAppointmentModal = ({ isOpen, onClose, patientId }: BookAppointmentMod
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+   const [doctors, setDoctors] = useState<{ id: string; name: string; specialty: string }[]>([]);
+
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      const { data, error } = await supabase
+        .from('doctors')
+        .select('id, full_name, specialty');
+      if (!error && data) {
+        setDoctors(
+          data.map((doc: any) => ({
+            id: doc.id,
+            name: doc.full_name,
+            specialty: doc.specialty,
+          }))
+        );
+      }
+    };
+    fetchDoctors();
+  }, []);
+
 
   const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'
   ];
 
-  const doctors = [
-    { id: 'doctor1', name: 'Dr. Sarah Johnson', specialty: 'General Medicine' },
-    { id: 'doctor2', name: 'Dr. Michael Chen', specialty: 'Cardiology' },
-    { id: 'doctor3', name: 'Dr. Emily Rodriguez', specialty: 'Dermatology' }
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -147,6 +147,33 @@ export type Database = {
         }
         Relationships: []
       }
+      doctors: {
+        Row: {
+          id: string;
+          full_name: string;
+          specialty: string;
+          email: string | null;
+          phone: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          full_name: string;
+          specialty: string;
+          email?: string | null;
+          phone?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          full_name?: string;
+          specialty?: string;
+          email?: string | null;
+          phone?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      }
     }
     Views: {
       [_ in never]: never
