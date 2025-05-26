@@ -20,15 +20,15 @@ import {
 
 const DashboardPreview = () => {
   const patientData = [
-    { name: "Sarah Johnson", condition: "Diabetes", risk: "Low", lastVisit: "2 days ago", vitals: "Normal" },
-    { name: "Michael Chen", condition: "Hypertension", risk: "Medium", lastVisit: "5 days ago", vitals: "Elevated" },
-    { name: "Emma Davis", condition: "Post-Surgery", risk: "High", lastVisit: "1 day ago", vitals: "Monitoring" },
+    { name: "Patient 1", condition: "Diabetes", risk: "Low", lastVisit: "2 days ago", vitals: "Normal" },
+    { name: "Patient 2", condition: "Hypertension", risk: "Medium", lastVisit: "5 days ago", vitals: "Elevated" },
+    { name: "Patient 3", condition: "Post-Surgery", risk: "High", lastVisit: "1 day ago", vitals: "Monitoring" },
   ];
 
   const upcomingAppointments = [
-    { patient: "John Smith", time: "2:00 PM", type: "Follow-up" },
-    { patient: "Lisa Brown", time: "3:30 PM", type: "Consultation" },
-    { patient: "David Wilson", time: "4:15 PM", type: "Check-up" },
+    { patient: "Patient A", time: "2:00 PM", type: "Follow-up" },
+    { patient: "Patient B", time: "3:30 PM", type: "Consultation" },
+    { patient: "Patient C", time: "4:15 PM", type: "Check-up" },
   ];
 
   return (
