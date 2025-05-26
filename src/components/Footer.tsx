@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Activity, Mail, Phone, MapPin, Twitter, Linkedin, Github } from 'lucide-react';
+import { Activity, Mail, Phone, MapPin, Twitter, Linkedin} from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -29,9 +29,6 @@ const Footer = () => {
                 <a href="https://www.linkedin.com/in/careflow-vision-aa1287368/" target="_blank" rel="noopener noreferrer">
                   <Linkedin className="w-5 h-5" />
                 </a>
-              </Button>
-              <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white p-2">
-                <Github className="w-5 h-5" />
               </Button>
             </div>
           </div>
