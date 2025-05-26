@@ -100,9 +100,9 @@ const Hero = () => {
             <div className="mt-8 pt-8 border-t border-gray-200">
               <p className="text-sm text-gray-500 mb-4">Trusted by leading healthcare organizations</p>
               <div className="flex items-center space-x-8 opacity-60">
-                <span className="font-bold text-lg">Mayo Clinic</span>
-                <span className="font-bold text-lg">Johns Hopkins</span>
-                <span className="font-bold text-lg">Cleveland Clinic</span>
+                <span className="font-bold text-lg">St.John's Ambulance</span>
+                <span className="font-bold text-lg">Nairobi Hospital</span>
+                <span className="font-bold text-lg">Aga Khan University Hospital</span>
               </div>
             </div>
           </div>
