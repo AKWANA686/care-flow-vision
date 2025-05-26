@@ -19,7 +19,7 @@ import {
   MessageSquare,
   Mail,
   Thermometer,
-  Droplets2
+  Droplets
 } from 'lucide-react';
 
 const DashboardPreview = () => {
@@ -72,7 +72,7 @@ const DashboardPreview = () => {
       title: "O2 Saturation",
       value: 97,
       unit: "%",
-      icon: <Droplets2 className="w-5 h-5 text-purple-500" />,
+      icon: <Droplets className="w-5 h-5 text-purple-500" />,
       trend: "down" as const,
       status: "normal" as const,
       normalRange: "95-100%"
