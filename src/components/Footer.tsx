@@ -63,7 +63,9 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">careflowvision@gmail.com</span>
+                <a href="mailto:careflowvision@gmail.com" className="text-gray-400 hover:text-white transition-colors">
+                  careflowvision@gmail.com
+                </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-gray-400" />
