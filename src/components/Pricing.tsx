@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Zap, Crown } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import  PaymentModal  from './PaymentModal';
+import PaymentModal from './PaymentModal';
 
 const Pricing = () => {
   const navigate = useNavigate();

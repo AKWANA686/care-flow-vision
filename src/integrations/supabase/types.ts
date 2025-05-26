@@ -212,46 +212,52 @@ export type Database = {
       }
       transactions: {
         Row: {
-          id: string
-          user_id: string
-          user_type: string
           amount: number
-          plan: string
-          status: string
-          checkout_request_id: string
+          checkout_request_id: string | null
+          created_at: string | null
+          id: string
           merchant_request_id: string | null
+          mpesa_receipt_number: string | null
+          phone_number: string | null
+          plan: string
           result_code: number | null
           result_desc: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
+          status: string
+          updated_at: string | null
           user_id: string
           user_type: string
+        }
+        Insert: {
           amount: number
-          plan: string
-          status: string
-          checkout_request_id: string
+          checkout_request_id?: string | null
+          created_at?: string | null
+          id?: string
           merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          phone_number?: string | null
+          plan: string
           result_code?: number | null
           result_desc?: string | null
-          created_at?: string
-          updated_at?: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+          user_type: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          user_type?: string
           amount?: number
-          plan?: string
-          status?: string
-          checkout_request_id?: string
+          checkout_request_id?: string | null
+          created_at?: string | null
+          id?: string
           merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          phone_number?: string | null
+          plan?: string
           result_code?: number | null
           result_desc?: string | null
-          created_at?: string
-          updated_at?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+          user_type?: string
         }
         Relationships: []
       }

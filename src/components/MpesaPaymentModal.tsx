@@ -15,6 +15,11 @@ interface MpesaPaymentModalProps {
   onSuccess: () => void;
 }
 
+interface TransactionRecord {
+  status: string;
+  result_desc?: string;
+}
+
 const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentModalProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -71,36 +76,31 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
 
     const poll = async () => {
       try {
+        // Query the transactions table directly using raw SQL to avoid type issues
         const { data: transaction, error } = await supabase
-          .from('transactions')
-          .select('status, result_desc')
-          .eq('checkout_request_id', checkoutRequestId)
-          .single();
+          .rpc('get_transaction_status', { checkout_id: checkoutRequestId });
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error checking transaction status:', error);
+          // Fallback: try direct table query
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('transactions' as any)
+            .select('status, result_desc')
+            .eq('checkout_request_id', checkoutRequestId)
+            .single();
 
-        if (transaction.status === 'completed') {
-          setIsPolling(false);
-          toast({
-            title: 'Payment Successful!',
-            description: 'Your subscription has been activated.',
-          });
-          onSuccess();
-          onClose();
+          if (fallbackError) throw fallbackError;
+          
+          const transactionData = fallbackData as TransactionRecord;
+          handleTransactionResult(transactionData);
           return;
         }
 
-        if (transaction.status === 'failed') {
-          setIsPolling(false);
-          toast({
-            title: 'Payment Failed',
-            description: transaction.result_desc || 'Payment was not completed.',
-            variant: 'destructive',
-          });
-          return;
-        }
+        const transactionData = transaction as TransactionRecord;
+        handleTransactionResult(transactionData);
 
-        // Continue polling if still pending
+      } catch (error) {
+        console.error('Error polling payment status:', error);
         attempts++;
         if (attempts < maxAttempts) {
           setTimeout(poll, 5000); // Poll every 5 seconds
@@ -112,9 +112,42 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
             variant: 'destructive',
           });
         }
-      } catch (error) {
-        console.error('Error polling payment status:', error);
+      }
+    };
+
+    const handleTransactionResult = (transaction: TransactionRecord) => {
+      if (transaction.status === 'completed') {
         setIsPolling(false);
+        toast({
+          title: 'Payment Successful!',
+          description: 'Your subscription has been activated.',
+        });
+        onSuccess();
+        onClose();
+        return;
+      }
+
+      if (transaction.status === 'failed') {
+        setIsPolling(false);
+        toast({
+          title: 'Payment Failed',
+          description: transaction.result_desc || 'Payment was not completed.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Continue polling if still pending
+      attempts++;
+      if (attempts < maxAttempts) {
+        setTimeout(poll, 5000); // Poll every 5 seconds
+      } else {
+        setIsPolling(false);
+        toast({
+          title: 'Payment Timeout',
+          description: 'Please check your M-Pesa messages and contact support if payment was deducted.',
+          variant: 'destructive',
+        });
       }
     };
 
@@ -174,7 +207,7 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
       } else {
         throw new Error(data.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment error:', error);
       toast({
         title: 'Payment Failed',
