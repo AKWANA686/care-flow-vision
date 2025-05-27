@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +8,8 @@ import CallPatientModal from '@/components/CallPatientModal';
 import SendMessageModal from '@/components/SendMessageModal';
 import SendReminderModal from '@/components/SendReminderModal';
 import ScheduleFollowupModal from '@/components/ScheduleFollowupModal';
+import SubscriptionStatus from '@/components/SubscriptionStatus';
+import TransactionHistory from '@/components/TransactionHistory';
 import { 
   Stethoscope, 
   Users, 
@@ -23,7 +24,8 @@ import {
   MessageSquare,
   Mail,
   FileText,
-  Heart
+  Heart,
+  CreditCard
 } from 'lucide-react';
 
 const DoctorDashboard = () => {
@@ -138,7 +140,7 @@ const DoctorDashboard = () => {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-6">
-          {/* Left Sidebar - Quick Stats */}
+          {/* Left Sidebar - Quick Stats & Subscription */}
           <div className="lg:col-span-3 space-y-6">
             <Card className="glass-effect border-0 shadow-lg">
               <CardHeader className="pb-3">
@@ -181,6 +183,9 @@ const DoctorDashboard = () => {
                 <div className="text-sm text-gray-600">Require immediate attention</div>
               </CardContent>
             </Card>
+
+            {/* Subscription Status */}
+            <SubscriptionStatus />
 
             {/* Quick Actions */}
             <Card className="glass-effect border-0 shadow-lg">
@@ -269,6 +274,9 @@ const DoctorDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Transaction History */}
+            <TransactionHistory />
 
             {/* Health Analytics Chart */}
             <Card className="glass-effect border-0 shadow-lg">

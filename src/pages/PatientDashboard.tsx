@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,13 +15,16 @@ import {
   Bell,
   MessageSquare,
   Phone,
-  Download
+  Download,
+  CreditCard
 } from 'lucide-react';
 import BookAppointmentModal from '@/components/BookAppointmentModal';
 import RequestRecordsModal from '@/components/RequestRecordsModal';
 import DownloadReportsModal from '@/components/DownloadReportsModal';
 import MessageDoctorModal from '@/components/MessageDoctorModal';
 import EmergencyContactModal from '@/components/EmergencyContactModal';
+import SubscriptionStatus from '@/components/SubscriptionStatus';
+import TransactionHistory from '@/components/TransactionHistory';
 
 const PatientDashboard = () => {
   const navigate = useNavigate();
@@ -119,7 +121,7 @@ const PatientDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-12 gap-6">
-          {/* Left Sidebar - Patient Info */}
+          {/* Left Sidebar - Patient Info & Subscription */}
           <div className="lg:col-span-3 space-y-6">
             <Card className="glass-effect border-0 shadow-lg">
               <CardHeader className="text-center">
@@ -162,6 +164,9 @@ const PatientDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Subscription Status */}
+            <SubscriptionStatus />
 
             {/* Quick Actions */}
             <Card className="glass-effect border-0 shadow-lg">
@@ -230,6 +235,9 @@ const PatientDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Transaction History */}
+            <TransactionHistory />
 
             {/* Test Results - CONFIDENTIAL */}
             <Card className="glass-effect border-0 shadow-lg border-l-4 border-l-red-500">
