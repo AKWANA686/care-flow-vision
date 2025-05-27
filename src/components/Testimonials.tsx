@@ -5,13 +5,20 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 // Kenyan avatar images from a free API
+const kenyanAvatars = [
+  "https://thisisme.ke/api/portraits/women/1.jpg",
+  "https://thisisme.ke/api/portraits/men/1.jpg",
+  "https://thisisme.ke/api/portraits/women/2.jpg",
+  "https://thisisme.ke/api/portraits/men/2.jpg",
+  "https://thisisme.ke/api/portraits/women/3.jpg"
+];
 
 const testimonials = [
   {
     name: "Sharon Nyambogo",
     role: "Diabetes Patient",
     location: "Kilimani, Nairobi",
-    avatar: "https://unsplash.com/photos/a-black-and-white-photo-of-a-woman-with-long-hair-HMzkZDke6yY",
+    avatar: kenyanAvatars[0],
     rating: 5,
     content: "CareFlow Vision transformed how I manage my diabetes in Nairobi. The glucose tracking and automatic reminders help me stay on top of my condition."
   },
