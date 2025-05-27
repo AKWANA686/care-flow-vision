@@ -4,46 +4,55 @@ import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
+// Kenyan avatar images from a free API
+const kenyanAvatars = [
+  "https://thisisme.ke/api/portraits/women/1.jpg",
+  "https://thisisme.ke/api/portraits/men/1.jpg",
+  "https://thisisme.ke/api/portraits/women/2.jpg",
+  "https://thisisme.ke/api/portraits/men/2.jpg",
+  "https://thisisme.ke/api/portraits/women/3.jpg"
+];
+
 const testimonials = [
   {
     name: "Sharon Nyambogo",
     role: "Diabetes Patient",
     location: "Kilimani, Nairobi",
-    avatar: "/kenyan-woman-1.jpg",
+    avatar: kenyanAvatars[0],
     rating: 5,
-    content: "CareFlow Vision transformed how I manage my diabetes in Nairobi. The glucose tracking and automatic reminders help me stay on top of my condition. My endocrinologist at Nairobi Hospital can monitor my readings in real-time!"
+    content: "CareFlow Vision transformed how I manage my diabetes in Nairobi. The glucose tracking and automatic reminders help me stay on top of my condition."
   },
   {
     name: "John Karanja", 
     role: "IT Consultant",
     location: "Westlands, Nairobi",
-    avatar: "/kenyan-man-1.jpg",
+    avatar: kenyanAvatars[1],
     rating: 5,
-    content: "As a busy professional in Westlands, having my health data accessible through CareFlow Vision gives me peace of mind. I can video consult my doctor during lunch breaks and get e-prescriptions delivered to my pharmacy."
+    content: "As a busy professional in Westlands, having my health data accessible through CareFlow Vision gives me peace of mind during my hectic schedule."
   },
   {
     name: "Grace Mwadzoya",
     role: "Teacher",
     location: "Karen, Nairobi",
-    avatar: "/kenyan-woman-2.jpg", 
+    avatar: kenyanAvatars[2], 
     rating: 5,
-    content: "The doctor-patient communication feature helped me tremendously during my pregnancy. My OB-GYN at Aga Khan Hospital responded quickly to all my questions, and the appointment reminders were lifesavers!"
+    content: "The doctor-patient communication feature helped me tremendously during my pregnancy. The appointment reminders were lifesavers!"
   },
   {
     name: "David Omondi",
-    role: "Small Business Owner",
+    role: "Business Owner",
     location: "Eastleigh, Nairobi",
-    avatar: "/kenyan-man-2.jpg",
+    avatar: kenyanAvatars[3],
     rating: 4,
-    content: "Being able to access my family's medical records from my phone in Eastleigh has saved us countless trips to the clinic. The Swahili language option makes it easy for my elderly parents to use too."
+    content: "Accessing my family's medical records from my phone in Eastleigh has saved us countless trips to the clinic. The Swahili option is great!"
   },
   {
     name: "Wanjiku Muthoni",
     role: "Retiree",
     location: "Runda, Nairobi", 
-    avatar: "/kenyan-woman-3.jpg",
+    avatar: kenyanAvatars[4],
     rating: 5,
-    content: "At my age, keeping track of medications was challenging. CareFlow Vision's voice reminders in Kikuyu help me take my pills on time. My daughter in Mombasa can also check on my health remotely."
+    content: "CareFlow Vision's voice reminders in Kikuyu help me take my pills on time. My daughter can check on my health remotely from Mombasa."
   }
 ];
 
@@ -52,7 +61,6 @@ const Testimonials = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check screen size
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -62,14 +70,11 @@ const Testimonials = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-slide functionality
   useEffect(() => {
     if (!isAutoPlaying) return;
-
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 7000);
-
     return () => clearInterval(interval);
   }, [isAutoPlaying, testimonials.length]);
 
@@ -95,11 +100,7 @@ const Testimonials = () => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-5 w-5 ${
-          i < rating 
-            ? 'text-yellow-400 fill-yellow-400' 
-            : 'text-gray-300'
-        }`}
+        className={`h-5 w-5 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
       />
     ));
   };
@@ -112,11 +113,11 @@ const Testimonials = () => {
             What <span className="text-blue-600">Kenyans Say</span> About CareFlow
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Real stories from patients and doctors across Nairobi's neighborhoods
+            Real stories from patients across Nairobi's neighborhoods
           </p>
         </div>
 
-        {/* Mobile/Tablet Carousel */}
+        {/* Mobile Carousel */}
         <div className="md:hidden relative">
           <div className="overflow-hidden">
             <div 
@@ -125,7 +126,7 @@ const Testimonials = () => {
             >
               {testimonials.map((testimonial, index) => (
                 <div key={index} className="w-full flex-shrink-0 px-2">
-                  <Card className="bg-white border-none shadow-lg h-full">
+                  <Card className="bg-white border-none shadow-lg h-full hover:shadow-xl transition-shadow">
                     <CardContent className="p-6">
                       <div className="flex justify-center mb-4">
                         {renderStars(testimonial.rating)}
@@ -135,19 +136,22 @@ const Testimonials = () => {
                         "{testimonial.content}"
                       </p>
                       <div className="flex flex-col items-center">
-                        <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100">
-                          <AvatarImage src={testimonial.avatar} />
+                        <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100 hover:border-blue-300 transition-colors">
+                          <AvatarImage 
+                            src={testimonial.avatar} 
+                            alt={`${testimonial.name}'s profile`}
+                          />
                           <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
                             {testimonial.name.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
-                        <h4 className="font-semibold text-gray-900 text-center">
+                        <h4 className="font-semibold text-gray-900 text-center hover:text-blue-600 transition-colors">
                           {testimonial.name}
                         </h4>
-                        <p className="text-blue-600 text-sm text-center">
+                        <p className="text-blue-600 text-sm text-center hover:text-blue-700 transition-colors">
                           {testimonial.role}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1 flex items-center">
+                        <p className="text-xs text-gray-500 mt-1 flex items-center hover:text-gray-700 transition-colors">
                           <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                           </svg>
@@ -161,12 +165,11 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Navigation Buttons */}
           <Button
             variant="ghost"
             size="icon"
             onClick={prevTestimonial}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 hover:scale-110 transition-all"
           >
             <ChevronLeft className="h-5 w-5 text-blue-600" />
           </Button>
@@ -175,23 +178,17 @@ const Testimonials = () => {
             variant="ghost"
             size="icon"
             onClick={nextTestimonial}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 hover:scale-110 transition-all"
           >
             <ChevronRight className="h-5 w-5 text-blue-600" />
           </Button>
 
-          {/* Pagination Dots */}
           <div className="flex justify-center mt-6 space-x-2">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  index === currentIndex
-                    ? 'bg-blue-600 w-3.5'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentIndex ? 'bg-blue-600 w-3.5' : 'bg-gray-300 hover:bg-gray-400'}`}
               />
             ))}
           </div>
@@ -202,30 +199,33 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <Card 
               key={index}
-              className="bg-white border-none shadow-md hover:shadow-lg transition-shadow duration-300 h-full"
+              className="bg-white border-none shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full"
             >
               <CardContent className="p-6 h-full flex flex-col">
                 <div className="flex justify-center mb-3">
                   {renderStars(testimonial.rating)}
                 </div>
-                <Quote className="h-7 w-7 text-blue-500 mx-auto mb-4 opacity-50" />
-                <p className="text-gray-700 mb-6 italic text-center flex-grow">
+                <Quote className="h-7 w-7 text-blue-500 mx-auto mb-4 opacity-50 hover:opacity-70 transition-opacity" />
+                <p className="text-gray-700 mb-6 italic text-center flex-grow hover:text-gray-800 transition-colors">
                   "{testimonial.content}"
                 </p>
                 <div className="flex flex-col items-center">
-                  <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100">
-                    <AvatarImage src={testimonial.avatar} />
+                  <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100 hover:border-blue-300 transition-colors">
+                    <AvatarImage 
+                      src={testimonial.avatar} 
+                      alt={`${testimonial.name}'s profile`}
+                    />
                     <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
                       {testimonial.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <h4 className="font-semibold text-gray-900 text-center">
+                  <h4 className="font-semibold text-gray-900 text-center hover:text-blue-600 transition-colors">
                     {testimonial.name}
                   </h4>
-                  <p className="text-blue-600 text-sm text-center">
+                  <p className="text-blue-600 text-sm text-center hover:text-blue-700 transition-colors">
                     {testimonial.role}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                  <p className="text-xs text-gray-500 mt-1 flex items-center hover:text-gray-700 transition-colors">
                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                     </svg>
@@ -237,12 +237,13 @@ const Testimonials = () => {
           ))}
         </div>
 
-        {/* Trust Indicators */}
         <div className="mt-16 text-center">
           <p className="text-gray-500 text-sm mb-2">TRUSTED BY HEALTHCARE PROVIDERS ACROSS</p>
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
             {['Nairobi Hospital', 'Aga Khan', 'MP Shah', 'Kenyatta National', 'Gertrudes'].map((name) => (
-              <div key={name} className="text-gray-700 font-medium">{name}</div>
+              <div key={name} className="text-gray-700 font-medium hover:text-blue-600 transition-colors">
+                {name}
+              </div>
             ))}
           </div>
         </div>
