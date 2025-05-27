@@ -7,58 +7,61 @@ import { Button } from "@/components/ui/button";
 
 const testimonials = [
   {
-    name: "Dr. Sharon Nyambogo",
-    role: "Cardiologist at Nairobi Hospital",
-    location: "Westlands, Nairobi",
-    avatar: "/placeholder.svg", 
+    name: "Sharon Nyambogo",
+    role: "Diabetes Patient",
+    location: "Kilimani, Nairobi",
+    avatar: "/kenyan-woman-1.jpg",
     rating: 5,
-    content: "CareFlow Vision has revolutionized how I manage patient follow-ups at Nairobi Hospital. The automated reminders have reduced our no-show rate by 67%, and the analytics dashboard gives me instant insights into patient compliance. My patients in Westlands love the convenient mobile access."
+    content: "CareFlow Vision transformed how I manage my diabetes in Nairobi. The glucose tracking and automatic reminders help me stay on top of my condition. My endocrinologist at Nairobi Hospital can monitor my readings in real-time!"
   },
   {
-    name: "John Karanja",
-    role: "Diabetes Patient",
-    location: "Karen, Nairobi", 
-    avatar: "/placeholder.svg",
+    name: "John Karanja", 
+    role: "IT Consultant",
+    location: "Westlands, Nairobi",
+    avatar: "/kenyan-man-1.jpg",
     rating: 5,
-    content: "As a busy professional working in Karen, having my health data accessible through CareFlow Vision has been a game-changer. Dr. Nyambogo can monitor my diabetes remotely, and I receive timely medication reminders via SMS. The platform keeps me connected to quality healthcare despite my hectic schedule."
+    content: "As a busy professional in Westlands, having my health data accessible through CareFlow Vision gives me peace of mind. I can video consult my doctor during lunch breaks and get e-prescriptions delivered to my pharmacy."
   },
   {
     name: "Grace Mwadzoya",
-    role: "Pediatric Nurse",
-    location: "Kilimani, Nairobi",
-    avatar: "/placeholder.svg",
+    role: "Teacher",
+    location: "Karen, Nairobi",
+    avatar: "/kenyan-woman-2.jpg", 
     rating: 5,
-    content: "The patient communication features are exceptional. Parents in Kilimani appreciate the appointment reminders and educational resources. I can see exactly which children need attention, and our clinic has seen a 45% improvement in treatment compliance since implementing CareFlow Vision."
+    content: "The doctor-patient communication feature helped me tremendously during my pregnancy. My OB-GYN at Aga Khan Hospital responded quickly to all my questions, and the appointment reminders were lifesavers!"
   },
   {
-    name: "Abdul Mohammed",
-    role: "Family Medicine Doctor",
+    name: "David Omondi",
+    role: "Small Business Owner",
     location: "Eastleigh, Nairobi",
-    avatar: "/placeholder.svg",
-    rating: 5,
-    content: "Serving the diverse community in Eastleigh, CareFlow Vision helps me manage over 500 families efficiently. The multi-language support and cultural sensitivity features make healthcare more accessible to our Somali and Arabic-speaking patients."
+    avatar: "/kenyan-man-2.jpg",
+    rating: 4,
+    content: "Being able to access my family's medical records from my phone in Eastleigh has saved us countless trips to the clinic. The Swahili language option makes it easy for my elderly parents to use too."
   },
   {
-    name: "Cyprian Nyakundi",
-    role: "Hospital Administrator",
-    location: "Upper Hill, Nairobi",
-    avatar: "/placeholder.svg",
+    name: "Wanjiku Muthoni",
+    role: "Retiree",
+    location: "Runda, Nairobi", 
+    avatar: "/kenyan-woman-3.jpg",
     rating: 5,
-    content: "From an administrative perspective, CareFlow Vision has streamlined our operations at our Upper Hill facility. The real-time dashboard helps us track patient flow, reduce wait times, and optimize doctor schedules. Staff productivity has increased by 30%."
-  },
-  {
-    name: "Tabitha Njeri",
-    role: "Expectant Mother",
-    location: "Kasarani, Nairobi",
-    avatar: "/placeholder.svg",
-    rating: 5,
-    content: "During my pregnancy journey in Kasarani, CareFlow Vision kept me connected with my gynecologist. The appointment reminders, vital signs tracking, and educational content made me feel supported throughout. The emergency contact feature gave me peace of mind."
+    content: "At my age, keeping track of medications was challenging. CareFlow Vision's voice reminders in Kikuyu help me take my pills on time. My daughter in Mombasa can also check on my health remotely."
   }
 ];
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Auto-slide functionality
   useEffect(() => {
@@ -66,162 +69,183 @@ const Testimonials = () => {
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 7000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, testimonials.length]);
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
   const prevTestimonial = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
     setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
     setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
+        className={`h-5 w-5 ${
           i < rating 
             ? 'text-yellow-400 fill-yellow-400' 
-            : 'text-gray-300 dark:text-gray-600'
+            : 'text-gray-300'
         }`}
       />
     ));
   };
 
   return (
-    <section id="testimonials" className="py-20 bg-white dark:bg-gray-900">
+    <section id="testimonials" className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 animate-slide-up">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4 dark:text-white">
-            Trusted by <span className="text-gradient">Healthcare Providers</span> in Nairobi
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+            What <span className="text-blue-600">Kenyans Say</span> About CareFlow
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            See how CareFlow Vision is transforming patient care and practice efficiency for medical professionals across Nairobi's leading healthcare facilities.
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Real stories from patients and doctors across Nairobi's neighborhoods
           </p>
         </div>
 
-        {/* Testimonial Carousel */}
-        <div className="relative max-w-4xl mx-auto">
-          <Card className="bg-white dark:bg-gray-800 border-none shadow-xl min-h-[400px] animate-slide-up">
-            <CardContent className="p-8">
-              <div className="flex flex-col items-center text-center">
-                <Quote className="h-12 w-12 text-blue-500 mb-6 opacity-50" />
-                
-                <div className="mb-6">
-                  {renderStars(testimonials[currentIndex].rating)}
+        {/* Mobile/Tablet Carousel */}
+        <div className="md:hidden relative">
+          <div className="overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="w-full flex-shrink-0 px-2">
+                  <Card className="bg-white border-none shadow-lg h-full">
+                    <CardContent className="p-6">
+                      <div className="flex justify-center mb-4">
+                        {renderStars(testimonial.rating)}
+                      </div>
+                      <Quote className="h-8 w-8 text-blue-500 mx-auto mb-4 opacity-50" />
+                      <p className="text-gray-700 mb-6 italic text-center">
+                        "{testimonial.content}"
+                      </p>
+                      <div className="flex flex-col items-center">
+                        <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100">
+                          <AvatarImage src={testimonial.avatar} />
+                          <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
+                            {testimonial.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <h4 className="font-semibold text-gray-900 text-center">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-blue-600 text-sm text-center">
+                          {testimonial.role}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1 flex items-center">
+                          <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                          </svg>
+                          {testimonial.location}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 italic leading-relaxed">
-                  "{testimonials[currentIndex].content}"
-                </p>
-
-                <div className="flex flex-col items-center">
-                  <Avatar className="h-16 w-16 mb-4">
-                    <AvatarImage src={testimonials[currentIndex].avatar} />
-                    <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-lg">
-                      {testimonials[currentIndex].name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h4 className="font-semibold text-gray-900 dark:text-white text-lg">
-                    {testimonials[currentIndex].name}
-                  </h4>
-                  <p className="text-blue-600 dark:text-blue-400 font-medium">
-                    {testimonials[currentIndex].role}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    📍 {testimonials[currentIndex].location}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </div>
 
           {/* Navigation Buttons */}
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={prevTestimonial}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-lg"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-5 w-5 text-blue-600" />
           </Button>
 
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={nextTestimonial}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-lg"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5 text-blue-600" />
           </Button>
 
           {/* Pagination Dots */}
-          <div className="flex justify-center mt-8 space-x-2">
+          <div className="flex justify-center mt-6 space-x-2">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
                   index === currentIndex
-                    ? 'bg-blue-600 scale-125'
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                    ? 'bg-blue-600 w-3.5'
+                    : 'bg-gray-300 hover:bg-gray-400'
                 }`}
+                aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
           </div>
-
-          {/* Auto-play indicator */}
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-              className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-            >
-              {isAutoPlaying ? '⏸️ Pause' : '▶️ Auto-play'}
-            </button>
-          </div>
         </div>
 
-        {/* Grid view for larger screens */}
-        <div className="hidden lg:grid lg:grid-cols-3 gap-8 mt-16">
-          {testimonials.slice(0, 3).map((testimonial, index) => (
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.map((testimonial, index) => (
             <Card 
               key={index}
-              className="bg-white dark:bg-gray-800 border-none shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-slide-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="bg-white border-none shadow-md hover:shadow-lg transition-shadow duration-300 h-full"
             >
-              <CardContent className="p-6">
-                <div className="mb-4">
+              <CardContent className="p-6 h-full flex flex-col">
+                <div className="flex justify-center mb-3">
                   {renderStars(testimonial.rating)}
                 </div>
-                <Quote className="h-8 w-8 text-blue-500 mb-4 opacity-50" />
-                <p className="text-gray-700 dark:text-gray-300 mb-6 italic">"{testimonial.content}"</p>
-                <div className="flex items-center">
-                  <Avatar className="h-10 w-10 mr-4">
+                <Quote className="h-7 w-7 text-blue-500 mx-auto mb-4 opacity-50" />
+                <p className="text-gray-700 mb-6 italic text-center flex-grow">
+                  "{testimonial.content}"
+                </p>
+                <div className="flex flex-col items-center">
+                  <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100">
                     <AvatarImage src={testimonial.avatar} />
-                    <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                    <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
                       {testimonial.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</p>
-                    <p className="text-sm text-blue-600 dark:text-blue-400">{testimonial.role}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">📍 {testimonial.location}</p>
-                  </div>
+                  <h4 className="font-semibold text-gray-900 text-center">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-blue-600 text-sm text-center">
+                    {testimonial.role}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
+                    {testimonial.location}
+                  </p>
                 </div>
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="mt-16 text-center">
+          <p className="text-gray-500 text-sm mb-2">TRUSTED BY HEALTHCARE PROVIDERS ACROSS</p>
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
+            {['Nairobi Hospital', 'Aga Khan', 'MP Shah', 'Kenyatta National', 'Gertrudes'].map((name) => (
+              <div key={name} className="text-gray-700 font-medium">{name}</div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
