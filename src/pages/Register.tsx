@@ -1,20 +1,53 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Activity, User, Stethoscope, ArrowLeft } from 'lucide-react';
+import { Activity, User, Stethoscope, ArrowLeft, Eye, EyeOff, Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    minLength: false,
+    hasUpper: false,
+    hasLower: false,
+    hasNumber: false,
+    hasSpecial: false
+  });
+
+  // Password strength calculation
+  useEffect(() => {
+    const requirements = {
+      minLength: password.length >= 8,
+      hasUpper: /[A-Z]/.test(password),
+      hasLower: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecial: /[!@#$%^&*]/.test(password)
+    };
+    
+    setPasswordRequirements(requirements);
+    
+    // Calculate strength (0-4)
+    const strength = Object.values(requirements).filter(Boolean).length;
+    setPasswordStrength(strength);
+  }, [password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check if password meets all requirements
+    if (passwordStrength < 4) {
+      alert('Please ensure your password meets all requirements');
+      return;
+    }
+    
     setIsLoading(true);
     
     // Simulate registration
@@ -22,6 +55,28 @@ const Register = () => {
       navigate('/login');
       setIsLoading(false);
     }, 2000);
+  };
+
+  const getPasswordStrengthColor = () => {
+    switch(passwordStrength) {
+      case 0: return 'bg-gray-200';
+      case 1: return 'bg-red-500';
+      case 2: return 'bg-yellow-500';
+      case 3: return 'bg-blue-500';
+      case 4: return 'bg-green-500';
+      default: return 'bg-gray-200';
+    }
+  };
+
+  const getPasswordStrengthText = () => {
+    switch(passwordStrength) {
+      case 0: return 'Very Weak';
+      case 1: return 'Weak';
+      case 2: return 'Moderate';
+      case 3: return 'Strong';
+      case 4: return 'Very Strong';
+      default: return '';
+    }
   };
 
   return (
@@ -85,12 +140,94 @@ const Register = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="patient-password">Password</Label>
-                    <Input id="patient-password" type="password" required />
+                    <div className="relative">
+                      <Input
+                        id="patient-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
+                    
+                    {/* Password Strength Meter */}
+                    <div className="mt-2">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs font-medium">Password Strength:</span>
+                        <span className="text-xs font-medium">
+                          {getPasswordStrengthText()}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div
+                          className={`h-1.5 rounded-full ${getPasswordStrengthColor()}`}
+                          style={{ width: `${(passwordStrength / 4) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    {/* Password Requirements */}
+                    <div className="mt-3 space-y-1">
+                      <p className="text-xs font-medium">Password Requirements:</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li className={`flex items-center ${passwordRequirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.minLength ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          Minimum 8 characters
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasUpper ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasUpper ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one uppercase letter
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasLower ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasLower ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one lowercase letter
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasNumber ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one number
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasSpecial ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasSpecial ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one special character (!@#$%^&*)
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   <Button
                     type="submit"
                     className="w-full medical-gradient text-white"
-                    disabled={isLoading}
+                    disabled={isLoading || passwordStrength < 4}
                   >
                     {isLoading ? 'Creating Account...' : 'Register as Patient'}
                   </Button>
@@ -123,12 +260,94 @@ const Register = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="doctor-password">Password</Label>
-                    <Input id="doctor-password" type="password" required />
+                    <div className="relative">
+                      <Input
+                        id="doctor-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
+                    
+                    {/* Password Strength Meter */}
+                    <div className="mt-2">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs font-medium">Password Strength:</span>
+                        <span className="text-xs font-medium">
+                          {getPasswordStrengthText()}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div
+                          className={`h-1.5 rounded-full ${getPasswordStrengthColor()}`}
+                          style={{ width: `${(passwordStrength / 4) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    {/* Password Requirements */}
+                    <div className="mt-3 space-y-1">
+                      <p className="text-xs font-medium">Password Requirements:</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li className={`flex items-center ${passwordRequirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.minLength ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          Minimum 8 characters
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasUpper ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasUpper ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one uppercase letter
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasLower ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasLower ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one lowercase letter
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasNumber ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one number
+                        </li>
+                        <li className={`flex items-center ${passwordRequirements.hasSpecial ? 'text-green-600' : 'text-gray-500'}`}>
+                          {passwordRequirements.hasSpecial ? (
+                            <Check className="h-3 w-3 mr-1" />
+                          ) : (
+                            <X className="h-3 w-3 mr-1" />
+                          )}
+                          At least one special character (!@#$%^&*)
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   <Button
                     type="submit"
                     className="w-full medical-gradient text-white"
-                    disabled={isLoading}
+                    disabled={isLoading || passwordStrength < 4}
                   >
                     {isLoading ? 'Creating Account...' : 'Register as Doctor'}
                   </Button>
