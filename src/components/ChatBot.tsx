@@ -38,6 +38,7 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [language, setLanguage] = useState<'english' | 'swahili'>('english');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -48,97 +49,159 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
     scrollToBottom();
   }, [messages]);
 
+  const getTimeOfDay = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return language === 'swahili' ? 'asubuhi' : 'morning';
+    if (hour < 17) return language === 'swahili' ? 'mchana' : 'afternoon';
+    return language === 'swahili' ? 'jioni' : 'evening';
+  };
+
   const generateBotResponse = (userMessage: string): string => {
     const message = userMessage.toLowerCase();
     
-    // Jarvis-like responses for doctors
-    const doctorResponses: DoctorResponses = {
-      greeting: [
-        `Good ${getTimeOfDay()}, Dr. ${userName}. I am ARIA - your Adaptive Response Intelligence Assistant. How may I assist you in your medical practice today?`,
-        `Welcome back, Dr. ${userName}. ARIA at your service. Shall we review your patient queue or would you prefer to discuss a specific case?`,
-        `Dr. ${userName}, I have been monitoring your schedule. How may I optimize your workflow today?`
-      ],
-      patients: [
-        "Accessing patient database... I have identified 3 patients requiring immediate attention and 7 pending follow-ups. Shall I prioritize them by risk assessment?",
-        "Patient analytics indicate a 15% improvement in treatment compliance this quarter. Would you like me to generate a detailed report?",
-        "I've detected anomalous patterns in Patient ID 2847's vitals. Recommend immediate consultation."
-      ],
-      schedule: [
-        "Your schedule optimization algorithm suggests rearranging appointments 3 and 5 for maximum efficiency. Shall I implement these changes?",
-        "I have blocked 30 minutes for emergency consultations based on historical data patterns.",
-        `Dr. ${userName}, your next patient has a complex medical history. Pulling relevant case files now.`
-      ],
-      default: [
-        `I'm processing your request, Dr. ${userName}. Could you provide more specific parameters?`,
-        "My medical knowledge database is at your disposal. How may I assist with your clinical decision-making?",
-        "I am continuously learning from our interactions to better serve your practice, Doctor."
-      ]
+    // Doctor responses in both languages
+    const doctorResponses: Record<'english' | 'swahili', DoctorResponses> = {
+      english: {
+        greeting: [
+          `Good ${getTimeOfDay()}, Dr. ${userName}. I am ARIA - your Adaptive Response Intelligence Assistant. How may I assist you in your medical practice today?`,
+          `Welcome back, Dr. ${userName}. ARIA at your service. Shall we review your patient queue or would you prefer to discuss a specific case?`,
+          `Dr. ${userName}, I have been monitoring your schedule. How may I optimize your workflow today?`
+        ],
+        patients: [
+          "Accessing patient database... I have identified 3 patients requiring immediate attention and 7 pending follow-ups. Shall I prioritize them by risk assessment?",
+          "Patient analytics indicate a 15% improvement in treatment compliance this quarter. Would you like me to generate a detailed report?",
+          "I've detected anomalous patterns in Patient ID 2847's vitals. Recommend immediate consultation."
+        ],
+        schedule: [
+          "Your schedule optimization algorithm suggests rearranging appointments 3 and 5 for maximum efficiency. Shall I implement these changes?",
+          "I have blocked 30 minutes for emergency consultations based on historical data patterns.",
+          `Dr. ${userName}, your next patient has a complex medical history. Pulling relevant case files now.`
+        ],
+        default: [
+          `I'm processing your request, Dr. ${userName}. Could you provide more specific parameters?`,
+          "My medical knowledge database is at your disposal. How may I assist with your clinical decision-making?",
+          "I am continuously learning from our interactions to better serve your practice, Doctor."
+        ]
+      },
+      swahili: {
+        greeting: [
+          `Habari za ${getTimeOfDay()}, Daktari ${userName}. Mimi ni ARIA - Msaidizi Wako wa Ujasusi wa Majibu Yanayobadilika. Ninaweza kukusaidiaje katika mazoezi yako ya matibabu leo?`,
+          `Karibu tena, Daktari ${userName}. ARIA yupo kwa huduma yako. Tupitie foleni ya wagonjwa au ungependa kujadili kesi fulani?`,
+          `Daktari ${userName}, nimekuwa nikifuatilia ratiba yako. Ninaweza kukuwezesha kazi yako leo vipi?`
+        ],
+        patients: [
+          "Kupata hifadhidata ya wagonjwa... Nimegundua wagonjwa 3 wanaohitaji umakini wa haraka na ufuatiliaji 7 unaosubiri. Je, niwaweke kipaumbele kulingana na tathmini ya hatari?",
+          "Uchambuzi wa wagonjwa unaonyesha kuboresha kwa 15% katika utii wa matibabu robo hii. Ungependa nitengeneze ripoti ya kina?",
+          "Nimegundua mifumo isiyo ya kawaida katika viashiria vya afya ya Mgonjwa ID 2847. Napendekeza ushauri wa haraka."
+        ],
+        schedule: [
+          "Algorithmu yako ya uboreshaji wa ratiba inapendekeza kupanga upya miadi 3 na 5 kwa ufanisi wa juu. Je, nitekeleze mabadiliko haya?",
+          "Nimezuia dakika 30 kwa mashauriano ya dharura kulingana na mifumo ya data ya kihistoria.",
+          `Daktari ${userName}, mgonjwa wako ujao ana historia tata ya matibabu. Nimeanza kuchakura faili zinazohusiana.`
+        ],
+        default: [
+          `Ninaichakura ombi lako, Daktari ${userName}. Unaweza kutoa vigezo zaidi?`,
+          "Hifadhidata yangu ya ujuzi wa matibabu iko tayari kwa matumizi yako. Ninaweza kusaidiaje katika uamuzi wako wa kliniki?",
+          "Ninaendelea kujifunza kutokana na mazungumzo yetu ili kukuhudumia vyema zaidi, Daktari."
+        ]
+      }
     };
 
-    // Jarvis-like responses for patients
-    const patientResponses: PatientResponses = {
-      greeting: [
-        `Hello ${userName}. I am ARIA, your personal health companion. Think of me as your medical assistant - always here to help you stay on track with your health journey.`,
-        `Welcome to CareFlow Vision, ${userName}. I'm ARIA, designed to make your healthcare experience seamless. How may I assist you today?`,
-        `Good ${getTimeOfDay()}, ${userName}. ARIA here, ready to help you manage your health with precision and care.`
-      ],
-      appointments: [
-        "I see you have an upcoming appointment on Thursday at 2 PM with Dr. Smith. Would you like me to set a reminder or help you prepare questions?",
-        "Based on your medical history, I recommend scheduling your annual check-up. Shall I find available appointments with your preferred physician?",
-        "Your last visit indicated follow-up blood work was needed. I can help you locate the nearest lab facility."
-      ],
-      symptoms: [
-        "I understand your concern. While I cannot diagnose, I can help you track your symptoms and determine if immediate medical attention is needed.",
-        "Your symptom log shows improvement over the past week. This is encouraging progress. Continue monitoring and I'll alert you to any concerning patterns.",
-        "Based on your input, I recommend consulting with your healthcare provider. Shall I help you schedule an appointment?"
-      ],
-      medications: [
-        "Your medication schedule is optimized for maximum effectiveness. I'll send you gentle reminders to maintain consistency.",
-        "I notice you missed your evening medication yesterday. Consistency is crucial for your treatment plan. Shall I adjust your reminder settings?",
-        "Your prescription refill is due in 3 days. I can notify your pharmacy or help you contact your doctor for renewals."
-      ],
-      default: [
-        `I'm here to support your health journey, ${userName}. Whether it's tracking symptoms, scheduling appointments, or medication reminders, I'm at your service.`,
-        "My capabilities include health monitoring, appointment management, and providing general wellness guidance. How may I assist you today?",
-        "I'm continuously learning to better serve your healthcare needs. Please feel free to ask me anything health-related."
-      ]
+    // Patient responses in both languages
+    const patientResponses: Record<'english' | 'swahili', PatientResponses> = {
+      english: {
+        greeting: [
+          `Hello ${userName}. I am ARIA, your personal health companion. Think of me as your medical assistant - always here to help you stay on track with your health journey.`,
+          `Welcome to CareFlow Vision, ${userName}. I'm ARIA, designed to make your healthcare experience seamless. How may I assist you today?`,
+          `Good ${getTimeOfDay()}, ${userName}. ARIA here, ready to help you manage your health with precision and care.`
+        ],
+        appointments: [
+          "I see you have an upcoming appointment on Thursday at 2 PM with Dr. Smith. Would you like me to set a reminder or help you prepare questions?",
+          "Based on your medical history, I recommend scheduling your annual check-up. Shall I find available appointments with your preferred physician?",
+          "Your last visit indicated follow-up blood work was needed. I can help you locate the nearest lab facility."
+        ],
+        symptoms: [
+          "I understand your concern. While I cannot diagnose, I can help you track your symptoms and determine if immediate medical attention is needed.",
+          "Your symptom log shows improvement over the past week. This is encouraging progress. Continue monitoring and I'll alert you to any concerning patterns.",
+          "Based on your input, I recommend consulting with your healthcare provider. Shall I help you schedule an appointment?"
+        ],
+        medications: [
+          "Your medication schedule is optimized for maximum effectiveness. I'll send you gentle reminders to maintain consistency.",
+          "I notice you missed your evening medication yesterday. Consistency is crucial for your treatment plan. Shall I adjust your reminder settings?",
+          "Your prescription refill is due in 3 days. I can notify your pharmacy or help you contact your doctor for renewals."
+        ],
+        default: [
+          `I'm here to support your health journey, ${userName}. Whether it's tracking symptoms, scheduling appointments, or medication reminders, I'm at your service.`,
+          "My capabilities include health monitoring, appointment management, and providing general wellness guidance. How may I assist you today?",
+          "I'm continuously learning to better serve your healthcare needs. Please feel free to ask me anything health-related."
+        ]
+      },
+      swahili: {
+        greeting: [
+          `Hujambo ${userName}. Mimi ni ARIA, mwenzi wako wa afya binafsi. Nifikirie kama msaidizi wako wa matibabu - niko hapa kila wakati kukusaidia kudumisha safari yako ya afya.`,
+          `Karibu kwenye CareFlow Vision, ${userName}. Mimi ni ARIA, nimeundwa kufanya uzoefu wako wa huduma za afya uwe rahisi. Ninaweza kukusaidiaje leo?`,
+          `Habari za ${getTimeOfDay()}, ${userName}. ARIA yupo, tayari kukusaidia kudhibiti afya yako kwa uangalifu na upendo.`
+        ],
+        appointments: [
+          "Naona una mkutano ujao Alhamisi saa 8 jioni na Daktari Smith. Ungependa nikuweke kumbusho au nikusaidie kuandaa maswali?",
+          "Kulingana na historia yako ya matibabu, napendekeza upange uchunguzi wako wa mwaka. Je, nitafute miadi inayopatikana na daktari wako unayempendelea?",
+          "Ziara yako ya mwisho ilionyesha kwamba uchunguzi wa damu wa ufuatiliaji ulihitajika. Ninaweza kukusaidia kupata kituo cha maabara kilicho karibu zaidi."
+        ],
+        symptoms: [
+          "Ninaelewa wasiwasi wako. Ingawa siwezi kutoa utambuzi, ninaweza kukusaidia kufuatilia dalili zako na kubaini ikiwa unahitaji matibabu ya haraka.",
+          "Kumbukumbu yako ya dalili inaonyesha mabadiliko chanya katika wiki iliyopita. Hii ni maendeleo yenye kuhimiza. Endelea kufuatilia na nitakutaarifu kuhusu mifumo yoyote ya wasiwasi.",
+          "Kulingana na maelezo yako, napendekeza ushauri na mtoa huduma zako za afya. Je, nikusaidie kupanga mkutano?"
+        ],
+        medications: [
+          "Ratiba yako ya dawa imeboreshwa kwa ufanisi wa juu zaidi. Nitakutumia kumbusho za upole kudumisha uthabiti.",
+          "Nimeona ulikosa dawa yako ya jioni jana. Uthabiti ni muhimu kwa mpango wako wa matibabu. Je, nibadilishe mipangilio yako ya kumbusho?",
+          "Kujaza upya dawa yako kunahitajika katika siku 3. Ninaweza kutaarifu duka lako la dawa au kukusaidia kuwasiliana na daktari wako kwa ajili ya kuvuja upya."
+        ],
+        default: [
+          `Niko hapa kusaidia safari yako ya afya, ${userName}. Ikiwa ni kufuatilia dalili, kupanga miadi, au kumbusho za dawa, nipo kwa huduma yako.`,
+          "Uwezo wangu ni pamoja na ufuatiliaji wa afya, usimamizi wa miadi, na kutoa mwongozo wa ustawi wa jumla. Ninaweza kukusaidiaje leo?",
+          "Ninaendelea kujifunza ili kukuhudumia vyema zaidi kwa mahitaji yako ya afya. Tafadhali jisikie huru kuniuliza chochote kuhusu afya."
+        ]
+      }
     };
 
-    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-      return getRandomResponse(userType === 'doctor' ? doctorResponses.greeting : patientResponses.greeting);
+    const currentDoctorResponses = doctorResponses[language];
+    const currentPatientResponses = patientResponses[language];
+
+    if (message.includes('hello') || message.includes('hi') || message.includes('hey') || 
+        (language === 'swahili' && (message.includes('hujambo') || message.includes('jambo') || message.includes('habari')))) {
+      return getRandomResponse(userType === 'doctor' ? currentDoctorResponses.greeting : currentPatientResponses.greeting);
     }
     
     if (userType === 'doctor') {
-      if (message.includes('patient') || message.includes('case')) {
-        return getRandomResponse(doctorResponses.patients);
+      if (message.includes('patient') || message.includes('case') || 
+          (language === 'swahili' && (message.includes('mgonjwa') || message.includes('kesi')))) {
+        return getRandomResponse(currentDoctorResponses.patients);
       }
-      if (message.includes('schedule') || message.includes('appointment')) {
-        return getRandomResponse(doctorResponses.schedule);
+      if (message.includes('schedule') || message.includes('appointment') || 
+          (language === 'swahili' && (message.includes('ratiba') || message.includes('muda')))) {
+        return getRandomResponse(currentDoctorResponses.schedule);
       }
-      return getRandomResponse(doctorResponses.default);
+      return getRandomResponse(currentDoctorResponses.default);
     } else {
-      if (message.includes('appointment') || message.includes('schedule')) {
-        return getRandomResponse(patientResponses.appointments);
+      if (message.includes('appointment') || message.includes('schedule') || 
+          (language === 'swahili' && (message.includes('miadi') || message.includes('muda')))) {
+        return getRandomResponse(currentPatientResponses.appointments);
       }
-      if (message.includes('symptom') || message.includes('pain') || message.includes('feel')) {
-        return getRandomResponse(patientResponses.symptoms);
+      if (message.includes('symptom') || message.includes('pain') || message.includes('feel') || 
+          (language === 'swahili' && (message.includes('dalili') || message.includes('maumivu') || message.includes('hisia')))) {
+        return getRandomResponse(currentPatientResponses.symptoms);
       }
-      if (message.includes('medication') || message.includes('pill') || message.includes('medicine')) {
-        return getRandomResponse(patientResponses.medications);
+      if (message.includes('medication') || message.includes('pill') || message.includes('medicine') || 
+          (language === 'swahili' && (message.includes('dawa') || message.includes('vidonge')))) {
+        return getRandomResponse(currentPatientResponses.medications);
       }
-      return getRandomResponse(patientResponses.default);
+      return getRandomResponse(currentPatientResponses.default);
     }
   };
 
   const getRandomResponse = (responses: string[]) => {
     return responses[Math.floor(Math.random() * responses.length)];
-  };
-
-  const getTimeOfDay = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'morning';
-    if (hour < 17) return 'afternoon';
-    return 'evening';
   };
 
   const sendMessage = async () => {
@@ -176,6 +239,10 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
     }
   };
 
+  const toggleLanguage = () => {
+    setLanguage(language === 'english' ? 'swahili' : 'english');
+  };
+
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
@@ -203,6 +270,16 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
             </h3>
           </div>
           <div className="flex space-x-2">
+            {!isMinimized && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleLanguage}
+                className="text-white hover:bg-white/20 p-1 text-xs"
+              >
+                {language === 'english' ? 'SW' : 'EN'}
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -230,8 +307,12 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
                   <Bot className="h-12 w-12 mx-auto mb-4 text-blue-500" />
                   <p className="text-sm">
                     {userType === 'doctor' 
-                      ? "Hello Doctor. I'm ARIA, your medical AI assistant. How may I assist you today?"
-                      : "Hi! I'm ARIA, your personal health companion. Ask me anything about your health journey."
+                      ? language === 'english' 
+                        ? "Hello Doctor. I'm ARIA, your medical AI assistant. How may I assist you today?"
+                        : "Hujambo Daktari. Mimi ni ARIA, msaidizi wako wa AI wa matibabu. Ninaweza kukusaidiaje leo?"
+                      : language === 'english'
+                        ? "Hi! I'm ARIA, your personal health companion. Ask me anything about your health journey."
+                        : "Habari! Mimi ni ARIA, mwenzi wako wa afya binafsi. Niulize chochote kuhusu safari yako ya afya."
                     }
                   </p>
                 </div>
@@ -286,7 +367,15 @@ const ChatBot = ({ userType = 'patient', userName = 'User' }: ChatBotProps) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={userType === 'doctor' ? "Ask ARIA about patients, schedules, or medical insights..." : "Ask ARIA about your health, appointments, or medications..."}
+                  placeholder={
+                    userType === 'doctor' 
+                      ? language === 'english'
+                        ? "Ask ARIA about patients, schedules, or medical insights..."
+                        : "Uliza ARIA kuhusu wagonjwa, ratiba, au maarifa ya matibabu..."
+                      : language === 'english'
+                        ? "Ask ARIA about your health, appointments, or medications..."
+                        : "Uliza ARIA kuhusu afya yako, miadi, au dawa..."
+                  }
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <Button
