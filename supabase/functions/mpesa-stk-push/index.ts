@@ -20,7 +20,7 @@ const MPESA_CONFIG = {
   SECRET: 'qMQN2n9f6w1soQ3OvfeWIDr83rAHP65kJdmuAGzjM1AgEDtCsj8Usb9gNzd1C5GG',
   PAYBILL: '174379',
   PASSKEY: 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
-  CALLBACK_URL: 'https://few-areas-count.loca.lt/callback',
+  CALLBACK_URL: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mpesa-callback`,
   SANDBOX_URL: 'https://sandbox.safaricom.co.ke',
 };
 
@@ -32,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const { phoneNumber, amount, plan, userId, userType }: STKPushRequest = await req.json();

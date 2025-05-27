@@ -76,34 +76,50 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
 
     const poll = async () => {
       try {
-        // Query the transactions table directly using raw SQL to avoid type issues
-        const { data: transaction, error } = await supabase
-          .rpc('get_transaction_status', { checkout_id: checkoutRequestId });
+        // Use the get-transaction-status function
+        const { data, error } = await supabase.functions.invoke('get-transaction-status', {
+          body: { checkout_id: checkoutRequestId }
+        });
 
         if (error) {
           console.error('Error checking transaction status:', error);
-          // Fallback: try direct table query
-          const { data: fallbackData, error: fallbackError } = await supabase
-            .from('transactions' as any)
-            .select('status, result_desc')
-            .eq('checkout_request_id', checkoutRequestId)
-            .single();
-
-          if (fallbackError) throw fallbackError;
-          
-          const transactionData = fallbackData as TransactionRecord;
-          handleTransactionResult(transactionData);
+          attempts++;
+          if (attempts < maxAttempts) {
+            setTimeout(poll, 5000);
+          } else {
+            setIsPolling(false);
+            toast({
+              title: 'Payment Timeout',
+              description: 'Please check your M-Pesa messages and contact support if payment was deducted.',
+              variant: 'destructive',
+            });
+          }
           return;
         }
 
-        const transactionData = transaction as TransactionRecord;
-        handleTransactionResult(transactionData);
+        if (data && typeof data === 'object' && 'status' in data) {
+          const transactionData = data as TransactionRecord;
+          handleTransactionResult(transactionData);
+        } else {
+          // Continue polling if no valid data
+          attempts++;
+          if (attempts < maxAttempts) {
+            setTimeout(poll, 5000);
+          } else {
+            setIsPolling(false);
+            toast({
+              title: 'Payment Timeout',
+              description: 'Please check your M-Pesa messages and contact support if payment was deducted.',
+              variant: 'destructive',
+            });
+          }
+        }
 
       } catch (error) {
         console.error('Error polling payment status:', error);
         attempts++;
         if (attempts < maxAttempts) {
-          setTimeout(poll, 5000); // Poll every 5 seconds
+          setTimeout(poll, 5000);
         } else {
           setIsPolling(false);
           toast({
@@ -140,7 +156,7 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
       // Continue polling if still pending
       attempts++;
       if (attempts < maxAttempts) {
-        setTimeout(poll, 5000); // Poll every 5 seconds
+        setTimeout(poll, 5000);
       } else {
         setIsPolling(false);
         toast({
@@ -164,7 +180,7 @@ const MpesaPaymentModal = ({ isOpen, onClose, plan, onSuccess }: MpesaPaymentMod
       return;
     }
 
-    const userType = localStorage.getItem('userType') as 'patient' | 'doctor';
+    const userType = localStorage.getItem('userType');
     const userId = userType === 'patient' 
       ? localStorage.getItem('patientId') 
       : localStorage.getItem('licenseNumber');
