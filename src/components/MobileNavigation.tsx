@@ -25,10 +25,17 @@ interface MobileNavigationProps {
   onOpenModal: (modalType: string) => void;
 }
 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  badge?: string;
+}
+
 const MobileNavigation = ({ userType, userName, onLogout, onOpenModal }: MobileNavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const patientMenuItems = [
+  const patientMenuItems: MenuItem[] = [
     { id: 'appointments', label: 'Book Appointment', icon: Calendar },
     { id: 'messages', label: 'Messages', icon: MessageSquare, badge: '3' },
     { id: 'records', label: 'Medical Records', icon: FileText },
@@ -36,7 +43,7 @@ const MobileNavigation = ({ userType, userName, onLogout, onOpenModal }: MobileN
     { id: 'emergency', label: 'Emergency Contact', icon: Phone },
   ];
 
-  const doctorMenuItems = [
+  const doctorMenuItems: MenuItem[] = [
     { id: 'patients', label: 'Patient List', icon: User },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
     { id: 'messages', label: 'Send Message', icon: MessageSquare },
