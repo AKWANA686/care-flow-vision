@@ -1,179 +1,174 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, CreditCard, CheckCircle, XCircle, Clock } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { CreditCard, Download, Calendar, DollarSign, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 interface Transaction {
   id: string;
+  type: 'subscription' | 'appointment' | 'consultation' | 'records';
+  description: string;
   amount: number;
-  plan: string;
-  status: string;
-  result_desc?: string;
-  mpesa_receipt_number?: string;
-  created_at: string;
-  phone_number?: string;
+  status: 'completed' | 'pending' | 'failed';
+  date: string;
+  paymentMethod: string;
 }
 
 const TransactionHistory = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const fetchTransactions = async () => {
-    try {
-      const userType = localStorage.getItem('userType');
-      const userId = userType === 'patient' 
-        ? localStorage.getItem('patientId') 
-        : localStorage.getItem('licenseNumber');
-
-      if (!userId) return;
-
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      setTransactions(data || []);
-    } catch (error: any) {
-      console.error('Error fetching transactions:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load transaction history',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
+  const [transactions] = useState<Transaction[]>([
+    {
+      id: 'TXN-001',
+      type: 'subscription',
+      description: 'Premium Plan - Monthly',
+      amount: 49.99,
+      status: 'completed',
+      date: '2024-01-15',
+      paymentMethod: '**** 4532'
+    },
+    {
+      id: 'TXN-002',
+      type: 'consultation',
+      description: 'Video Consultation - Dr. Johnson',
+      amount: 75.00,
+      status: 'completed',
+      date: '2024-01-10',
+      paymentMethod: '**** 4532'
+    },
+    {
+      id: 'TXN-003',
+      type: 'records',
+      description: 'Medical Records Request',
+      amount: 15.00,
+      status: 'pending',
+      date: '2024-01-08',
+      paymentMethod: '**** 4532'
+    },
+    {
+      id: 'TXN-004',
+      type: 'appointment',
+      description: 'In-Person Appointment',
+      amount: 120.00,
+      status: 'completed',
+      date: '2024-01-05',
+      paymentMethod: '**** 4532'
     }
-  };
+  ]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'pending':
+        return <Clock className="w-4 h-4 text-yellow-500" />;
       case 'failed':
         return <XCircle className="w-4 h-4 text-red-500" />;
       default:
-        return <Clock className="w-4 h-4 text-yellow-500" />;
+        return <Clock className="w-4 h-4 text-gray-500" />;
     }
   };
 
-  const getStatusVariant = (status: string): "default" | "destructive" | "secondary" => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'default';
+        return 'bg-green-50 text-green-700 border-green-200';
+      case 'pending':
+        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
       case 'failed':
-        return 'destructive';
+        return 'bg-red-50 text-red-700 border-red-200';
       default:
-        return 'secondary';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
-  const formatAmount = (amount: number) => {
-    return `Ksh. ${amount.toLocaleString()}`;
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'subscription':
+        return <CreditCard className="w-4 h-4" />;
+      case 'appointment':
+        return <Calendar className="w-4 h-4" />;
+      case 'consultation':
+        return <Calendar className="w-4 h-4" />;
+      case 'records':
+        return <Download className="w-4 h-4" />;
+      default:
+        return <DollarSign className="w-4 h-4" />;
+    }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  if (loading) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const totalSpent = transactions
+    .filter(t => t.status === 'completed')
+    .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <Card>
+    <Card className="glass-effect border-0 shadow-lg">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center space-x-2">
-              <CreditCard className="w-5 h-5" />
-              <span>Transaction History</span>
-            </CardTitle>
-            <CardDescription>
-              Your payment and subscription history
-            </CardDescription>
-          </div>
-          <Button variant="outline" size="sm" onClick={fetchTransactions}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+          <CardTitle className="flex items-center">
+            <CreditCard className="w-5 h-5 mr-2" />
+            Transaction History
+          </CardTitle>
+          <Badge variant="secondary" className="flex items-center">
+            <DollarSign className="w-3 h-3 mr-1" />
+            ${totalSpent.toFixed(2)} total
+          </Badge>
         </div>
+        <CardDescription>
+          Your payment history and billing details
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        {transactions.length === 0 ? (
-          <div className="text-center py-8">
-            <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">No transactions found</p>
-            <p className="text-sm text-gray-400 mt-1">
-              Your payment history will appear here
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
+        <ScrollArea className="h-64">
+          <div className="space-y-3">
             {transactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
               >
                 <div className="flex items-center space-x-3">
-                  {getStatusIcon(transaction.status)}
+                  <div className="p-2 bg-blue-50 rounded-full">
+                    {getTypeIcon(transaction.type)}
+                  </div>
                   <div>
-                    <p className="font-medium">{transaction.plan}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {formatDate(transaction.created_at)}
-                    </p>
-                    {transaction.mpesa_receipt_number && (
-                      <p className="text-xs text-gray-500">
-                        Receipt: {transaction.mpesa_receipt_number}
-                      </p>
-                    )}
+                    <h4 className="font-semibold text-sm">
+                      {transaction.description}
+                    </h4>
+                    <div className="flex items-center space-x-2 text-xs text-gray-500">
+                      <span>{transaction.date}</span>
+                      <span>•</span>
+                      <span>{transaction.paymentMethod}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">{formatAmount(transaction.amount)}</p>
-                  <Badge variant={getStatusVariant(transaction.status)} className="mt-1">
-                    {transaction.status}
-                  </Badge>
-                  {transaction.status === 'failed' && transaction.result_desc && (
-                    <p className="text-xs text-red-500 mt-1 max-w-32 truncate">
-                      {transaction.result_desc}
-                    </p>
-                  )}
+                  <div className="font-semibold text-sm">
+                    ${transaction.amount.toFixed(2)}
+                  </div>
+                  <div className="flex items-center justify-end mt-1">
+                    {getStatusIcon(transaction.status)}
+                    <Badge 
+                      variant="outline" 
+                      className={`ml-1 text-xs ${getStatusColor(transaction.status)}`}
+                    >
+                      {transaction.status}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </ScrollArea>
+        <div className="flex gap-2 mt-4">
+          <Button variant="outline" className="flex-1">
+            <Download className="w-4 h-4 mr-2" />
+            Export
+          </Button>
+          <Button variant="outline" className="flex-1">
+            <CreditCard className="w-4 h-4 mr-2" />
+            Payment Methods
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
