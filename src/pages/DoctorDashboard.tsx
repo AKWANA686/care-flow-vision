@@ -8,8 +8,12 @@ import CallPatientModal from '@/components/CallPatientModal';
 import SendMessageModal from '@/components/SendMessageModal';
 import SendReminderModal from '@/components/SendReminderModal';
 import ScheduleFollowupModal from '@/components/ScheduleFollowupModal';
+import VideoCallModal from '@/components/VideoCallModal';
+import MobileNavigation from '@/components/MobileNavigation';
+import NotificationCenter from '@/components/NotificationCenter';
 import SubscriptionStatus from '@/components/SubscriptionStatus';
 import TransactionHistory from '@/components/TransactionHistory';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Stethoscope, 
   Users, 
@@ -25,11 +29,14 @@ import {
   Mail,
   FileText,
   Heart,
-  CreditCard
+  CreditCard,
+  Video,
+  Bell
 } from 'lucide-react';
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [doctorData, setDoctorData] = useState({
     name: 'Dr. Sarah Johnson',
     specialization: 'Cardiology',
@@ -42,6 +49,8 @@ const DoctorDashboard = () => {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [isFollowupModalOpen, setIsFollowupModalOpen] = useState(false);
+  const [isVideoCallModalOpen, setIsVideoCallModalOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const userType = localStorage.getItem('userType');
@@ -65,6 +74,29 @@ const DoctorDashboard = () => {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('licenseNumber');
     navigate('/');
+  };
+
+  const handleMobileModalOpen = (modalType: string) => {
+    switch (modalType) {
+      case 'patients':
+        // In a real app, this would open a patient list modal
+        break;
+      case 'schedule':
+        setIsFollowupModalOpen(true);
+        break;
+      case 'messages':
+        setIsMessageModalOpen(true);
+        break;
+      case 'video-call':
+        setIsVideoCallModalOpen(true);
+        break;
+      case 'analytics':
+        // In a real app, this would open an analytics modal
+        break;
+      case 'notifications':
+        setShowNotifications(true);
+        break;
+    }
   };
 
   const patientData = [
@@ -110,6 +142,14 @@ const DoctorDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
+              {isMobile && (
+                <MobileNavigation
+                  userType="doctor"
+                  userName={doctorData.name}
+                  onLogout={handleLogout}
+                  onOpenModal={handleMobileModalOpen}
+                />
+              )}
               <div className="medical-gradient p-2 rounded-xl">
                 <Stethoscope className="h-6 w-6 text-white" />
               </div>
@@ -119,14 +159,38 @@ const DoctorDashboard = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary">{doctorData.specialization}</Badge>
+              {!isMobile && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="relative"
+                  >
+                    <Bell className="w-4 h-4" />
+                    <Badge variant="destructive" className="absolute -top-2 -right-2 w-5 h-5 p-0 text-xs">
+                      5
+                    </Badge>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsVideoCallModalOpen(true)}
+                  >
+                    <Video className="w-4 h-4 mr-2" />
+                    Call Patient
+                  </Button>
+                  <Badge variant="secondary">{doctorData.specialization}</Badge>
+                </>
+              )}
               <Button 
                 variant="outline" 
                 onClick={handleLogout}
                 className="flex items-center"
+                size={isMobile ? "sm" : "default"}
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                Logout
+                {!isMobile && "Logout"}
               </Button>
             </div>
           </div>
@@ -134,14 +198,24 @@ const DoctorDashboard = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Real-time Vital Signs Chart */}
-        <div className="mb-12">
-          <VitalSignsChart />
-        </div>
+        {/* Notifications Panel */}
+        {showNotifications && !isMobile && (
+          <div className="mb-6">
+            <NotificationCenter userType="doctor" />
+          </div>
+        )}
 
-        <div className="grid lg:grid-cols-12 gap-6">
+        {/* Real-time Vital Signs Chart */}
+        {!isMobile && (
+          <div className="mb-12">
+            <VitalSignsChart />
+          </div>
+        )}
+
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-12'} gap-6`}>
           {/* Left Sidebar - Quick Stats & Subscription */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-3'} space-y-6`}>
+            {/* ... keep existing code (stats cards, subscription status, quick actions) */}
             <Card className="glass-effect border-0 shadow-lg">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center">
@@ -184,10 +258,8 @@ const DoctorDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Subscription Status */}
             <SubscriptionStatus />
 
-            {/* Quick Actions */}
             <Card className="glass-effect border-0 shadow-lg">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
@@ -195,10 +267,10 @@ const DoctorDashboard = () => {
               <CardContent className="space-y-3">
                 <Button 
                   className="w-full justify-start bg-blue-50 text-blue-700 hover:bg-blue-100 border-0"
-                  onClick={() => setIsCallModalOpen(true)}
+                  onClick={() => setIsVideoCallModalOpen(true)}
                 >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call Patient
+                  <Video className="w-4 h-4 mr-2" />
+                  Video Call
                 </Button>
                 <Button 
                   className="w-full justify-start bg-green-50 text-green-700 hover:bg-green-100 border-0"
@@ -226,8 +298,8 @@ const DoctorDashboard = () => {
           </div>
 
           {/* Main Content Area */}
-          <div className="lg:col-span-6 space-y-6">
-            {/* Patient List - CONFIDENTIAL ACCESS */}
+          <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-6'} space-y-6`}>
+            {/* ... keep existing code (patient list, transaction history, analytics chart) */}
             <Card className="glass-effect border-0 shadow-lg border-l-4 border-l-red-500">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -242,7 +314,7 @@ const DoctorDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {patientData.map((patient, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200">
+                    <div key={index} className={`flex items-center justify-between p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 ${isMobile ? 'flex-col space-y-2' : ''}`}>
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold">{patient.name.split(' ').map(n => n[0]).join('')}</span>
@@ -275,10 +347,8 @@ const DoctorDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Transaction History */}
             <TransactionHistory />
 
-            {/* Health Analytics Chart */}
             <Card className="glass-effect border-0 shadow-lg">
               <CardHeader>
                 <CardTitle className="text-xl flex items-center">
@@ -308,97 +378,97 @@ const DoctorDashboard = () => {
           </div>
 
           {/* Right Sidebar - Appointments & Monitoring */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Upcoming Appointments */}
-            <Card className="glass-effect border-0 shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center">
-                  <Clock className="w-5 h-5 mr-2 text-purple-600" />
-                  Today's Schedule
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {upcomingAppointments.map((appointment, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                      <div>
-                        <p className="font-medium text-sm">{appointment.patient}</p>
-                        <p className="text-xs text-gray-600">{appointment.type}</p>
-                        <p className="text-xs text-gray-500">ID: {appointment.patientId}</p>
+          {!isMobile && (
+            <div className="lg:col-span-3 space-y-6">
+              {/* ... keep existing code (appointments, monitoring, alerts) */}
+              <Card className="glass-effect border-0 shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center">
+                    <Clock className="w-5 h-5 mr-2 text-purple-600" />
+                    Today's Schedule
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {upcomingAppointments.map((appointment, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div>
+                          <p className="font-medium text-sm">{appointment.patient}</p>
+                          <p className="text-xs text-gray-600">{appointment.type}</p>
+                          <p className="text-xs text-gray-500">ID: {appointment.patientId}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-purple-600">{appointment.time}</p>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-purple-600">{appointment.time}</p>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="glass-effect border-0 shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center">
+                    <Heart className="w-5 h-5 mr-2 text-red-500" />
+                    Live Monitoring
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Active Sensors</span>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2" />
+                        <span className="text-sm font-semibold">247</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Critical Alerts</span>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse mr-2" />
+                        <span className="text-sm font-semibold">3</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">System Status</span>
+                      <div className="flex items-center">
+                        <CheckCircle2 className="w-4 h-4 text-green-500 mr-1" />
+                        <span className="text-sm font-semibold text-green-600">Optimal</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-            {/* Live Monitoring Status */}
-            <Card className="glass-effect border-0 shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center">
-                  <Heart className="w-5 h-5 mr-2 text-red-500" />
-                  Live Monitoring
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Active Sensors</span>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2" />
-                      <span className="text-sm font-semibold">247</span>
+              <Card className="glass-effect border-0 shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center">
+                    <AlertTriangle className="w-5 h-5 mr-2 text-orange-600" />
+                    Recent Alerts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                      <p className="text-sm font-medium text-red-900">High BP Alert</p>
+                      <p className="text-xs text-red-700">Michael Chen - 180/95</p>
+                      <p className="text-xs text-gray-500">2 min ago</p>
+                    </div>
+                    <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
+                      <p className="text-sm font-medium text-orange-900">Missed Medication</p>
+                      <p className="text-xs text-orange-700">Emma Davis - Evening dose</p>
+                      <p className="text-xs text-gray-500">1 hour ago</p>
+                    </div>
+                    <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <p className="text-sm font-medium text-yellow-900">Follow-up Due</p>
+                      <p className="text-xs text-yellow-700">Sarah Johnson - Diabetes check</p>
+                      <p className="text-xs text-gray-500">Today</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Critical Alerts</span>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse mr-2" />
-                      <span className="text-sm font-semibold">3</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">System Status</span>
-                    <div className="flex items-center">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mr-1" />
-                      <span className="text-sm font-semibold text-green-600">Optimal</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Patient Alerts */}
-            <Card className="glass-effect border-0 shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center">
-                  <AlertTriangle className="w-5 h-5 mr-2 text-orange-600" />
-                  Recent Alerts
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                    <p className="text-sm font-medium text-red-900">High BP Alert</p>
-                    <p className="text-xs text-red-700">Michael Chen - 180/95</p>
-                    <p className="text-xs text-gray-500">2 min ago</p>
-                  </div>
-                  <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                    <p className="text-sm font-medium text-orange-900">Missed Medication</p>
-                    <p className="text-xs text-orange-700">Emma Davis - Evening dose</p>
-                    <p className="text-xs text-gray-500">1 hour ago</p>
-                  </div>
-                  <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <p className="text-sm font-medium text-yellow-900">Follow-up Due</p>
-                    <p className="text-xs text-yellow-700">Sarah Johnson - Diabetes check</p>
-                    <p className="text-xs text-gray-500">Today</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
 
@@ -418,6 +488,11 @@ const DoctorDashboard = () => {
       <ScheduleFollowupModal
         isOpen={isFollowupModalOpen}
         onClose={() => setIsFollowupModalOpen(false)}
+      />
+      <VideoCallModal
+        isOpen={isVideoCallModalOpen}
+        onClose={() => setIsVideoCallModalOpen(false)}
+        userType="doctor"
       />
     </div>
   );
