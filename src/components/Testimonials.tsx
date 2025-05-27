@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 // Kenyan avatar images from a free API
 const kenyanAvatars = [
-  "https://thisisme.ke/api/portraits/women/1.jpg",
+  "https://unsplash.com/photos/a-black-and-white-photo-of-a-woman-with-long-hair-HMzkZDke6yY",
   "https://thisisme.ke/api/portraits/men/1.jpg",
   "https://thisisme.ke/api/portraits/women/2.jpg",
   "https://thisisme.ke/api/portraits/men/2.jpg",
