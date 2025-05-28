@@ -6,12 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Star, Zap, Crown } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import PaymentModal from './PaymentModal';
+import FreeTrialModal from './FreeTrialModal';
 
 const Pricing = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedPlan, setSelectedPlan] = useState<{ name: string; price: string } | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isFreeTrialModalOpen, setIsFreeTrialModalOpen] = useState(false);
 
   const plans = [
     {
@@ -105,6 +107,10 @@ const Pricing = () => {
     setIsPaymentModalOpen(true);
   };
 
+  const handleStartTrial = () => {
+    setIsFreeTrialModalOpen(true);
+  };
+
   return (
     <section id="pricing" className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -114,10 +120,23 @@ const Pricing = () => {
             Simple,{' '}
             <span className="text-gradient">Transparent Pricing</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Choose the perfect plan for your healthcare organization.
             All plans include our core features with no hidden fees.
           </p>
+          
+          {/* Free Trial CTA */}
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-6 border-2 border-blue-200 mb-8 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-blue-800 mb-2">Try Before You Buy!</h3>
+            <p className="text-gray-600 mb-4">Start with a 30-day free trial. No credit card required.</p>
+            <Button 
+              onClick={handleStartTrial}
+              className="bg-gradient-to-r from-blue-500 to-green-500 text-white hover:opacity-90 transition-all duration-300"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              Start Free Trial
+            </Button>
+          </div>
         </div>
 
         {/* Pricing Cards */}
@@ -228,6 +247,12 @@ const Pricing = () => {
           }}
         />
       )}
+
+      {/* Free Trial Modal */}
+      <FreeTrialModal 
+        isOpen={isFreeTrialModalOpen} 
+        onClose={() => setIsFreeTrialModalOpen(false)} 
+      />
     </section>
   );
 };

@@ -1,8 +1,11 @@
-
+import { useState } from 'react';
 import { Star, Quote } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import FreeTrialModal from './FreeTrialModal';
 
 const Testimonials = () => {
+  const [isFreeTrialModalOpen, setIsFreeTrialModalOpen] = useState(false);
+  
   const testimonials = [
     {
       name: "Dr. Sarah Mitchell",
@@ -127,7 +130,10 @@ const Testimonials = () => {
             Join the growing community of healthcare professionals and patients who are experiencing better outcomes with our platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={() => setIsFreeTrialModalOpen(true)}
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
               Start Free Trial
             </button>
             <button className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
@@ -136,6 +142,12 @@ const Testimonials = () => {
           </div>
         </div>
       </div>
+
+      {/* Free Trial Modal */}
+      <FreeTrialModal 
+        isOpen={isFreeTrialModalOpen} 
+        onClose={() => setIsFreeTrialModalOpen(false)} 
+      />
     </section>
   );
 };

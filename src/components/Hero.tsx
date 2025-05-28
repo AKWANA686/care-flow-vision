@@ -1,9 +1,14 @@
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Play, Shield, Zap, Users, Lock } from 'lucide-react';
+import VideoModal from './VideoModal';
+import FreeTrialModal from './FreeTrialModal';
 
 const Hero = () => {
+  const [isFreeTrialModalOpen, setIsFreeTrialModalOpen] = useState(false);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Gradient */}
@@ -25,19 +30,19 @@ const Hero = () => {
               HIPAA Compliant Healthcare Platform
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
               Revolutionize{' '}
               <span className="text-gradient">Patient Care</span>{' '}
               with Smart Follow-ups
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
               Transform healthcare delivery with our comprehensive platform that automates follow-ups, 
               predicts health risks, and ensures no patient falls through the cracks.
             </p>
 
             {/* Key Benefits */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               <div className="flex items-center">
                 <div className="bg-blue-100 w-10 h-10 rounded-xl flex items-center justify-center mr-3">
                   <Shield className="w-5 h-5 text-blue-600" />
@@ -68,23 +73,30 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Button 
                 size="lg" 
-                className="medical-gradient text-white hover:opacity-90 transition-all duration-300 transform hover:scale-105"
+                className="medical-gradient text-white hover:opacity-90 transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                onClick={() => setIsFreeTrialModalOpen(true)}
               >
                 <span>Start Free Trial</span>
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-2 border-gray-300 hover:border-blue-400 transition-colors"
+              
+              <VideoModal 
+                videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="CareFlow Vision Platform Demo"
               >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
-              </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-gray-300 hover:border-blue-400 transition-colors w-full sm:w-auto"
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Watch Demo
+                </Button>
+              </VideoModal>
             </div>
 
             {/* User Type Badges */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-8">
               <Badge variant="outline" className="border-2 border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100">
                 For Doctors
               </Badge>
@@ -99,10 +111,10 @@ const Hero = () => {
             {/* Social Proof */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <p className="text-sm text-gray-500 mb-4">Trusted by leading healthcare organizations</p>
-              <div className="flex items-center space-x-8 opacity-60">
-                <span className="font-bold text-lg">St.John's Ambulance</span>
-                <span className="font-bold text-lg">Nairobi Hospital</span>
-                <span className="font-bold text-lg">Aga Khan University Hospital</span>
+              <div className="flex flex-wrap items-center gap-4 sm:gap-8 opacity-60">
+                <span className="font-bold text-sm sm:text-lg">St.John's Ambulance</span>
+                <span className="font-bold text-sm sm:text-lg">Nairobi Hospital</span>
+                <span className="font-bold text-sm sm:text-lg">Aga Khan University Hospital</span>
               </div>
             </div>
           </div>
@@ -196,6 +208,12 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {/* Free Trial Modal */}
+      <FreeTrialModal 
+        isOpen={isFreeTrialModalOpen} 
+        onClose={() => setIsFreeTrialModalOpen(false)} 
+      />
     </section>
   );
 };
