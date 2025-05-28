@@ -81,7 +81,7 @@ const Hero = () => {
               </Button>
               
               <VideoModal 
-                videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                videoUrl="https://jmp.sh/1FeAGcUQ"
                 title="CareFlow Vision Platform Demo"
               >
                 <Button 
