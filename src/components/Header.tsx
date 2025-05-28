@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Activity } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 
@@ -23,8 +23,21 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="medical-gradient p-2 rounded-xl">
-              <Activity className="h-6 w-6 text-white" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden">
+              <img 
+                src="https://chatgpt.com/s/m_68366ee95e6c8191a768939524f409fd" 
+                alt="CareFlow Vision Logo"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  // Fallback if the image doesn't load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <div className="medical-gradient p-2 rounded-xl hidden">
+                <div className="w-6 h-6 bg-white rounded" />
+              </div>
             </div>
             <span className="text-xl font-bold text-gradient">CareFlow Vision</span>
           </div>
@@ -46,7 +59,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <Link to="/login">
-              <Button variant="outline" className="hover-scale">
+              <Button variant="outline" className="hover-scale border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                 Login
               </Button>
             </Link>
@@ -85,7 +98,7 @@ const Header = () => {
               ))}
               <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                 <Link to="/login">
-                  <Button variant="outline" className="w-full mb-2">
+                  <Button variant="outline" className="w-full mb-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                     Login
                   </Button>
                 </Link>
