@@ -124,7 +124,7 @@ const Hero = () => {
             {/* Healthcare Professional Image */}
             <div className="relative mb-6">
               <img 
-                src="https://unsplash.com/photos/a-man-showing-something-on-the-computer-av4IfCZG8Ic?w=600&h=400&fit=crop&crop=face"
+                src="Photo by Tima Miroshnichenko from Pexels: https://www.pexels.com/photo/a-man-and-woman-with-stethoscopes-wearing-white-robes-looking-at-a-tablet-on-a-desk-5452232/?w=600&h=400&fit=crop&crop=face"
                 alt="Healthcare professional using digital technology"
                 className="w-full h-80 object-cover rounded-2xl shadow-2xl"
               />
