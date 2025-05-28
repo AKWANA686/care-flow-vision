@@ -1,235 +1,94 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 
-// Kenyan avatar images from a free API
-const kenyanAvatars = [
-  "https://thisisme.ke/api/portraits/women/1.jpg",
-  "https://thisisme.ke/api/portraits/men/1.jpg",
-  "https://thisisme.ke/api/portraits/women/2.jpg",
-  "https://thisisme.ke/api/portraits/men/2.jpg",
-  "https://thisisme.ke/api/portraits/women/3.jpg"
-];
-
-const testimonials = [
-  {
-    name: "Sharon Nyambogo",
-    role: "Diabetes Patient",
-    location: "Kilimani, Nairobi",
-    avatar: kenyanAvatars[0],
-    rating: 5,
-    content: "CareFlow Vision transformed how I manage my diabetes in Nairobi. The glucose tracking and automatic reminders help me stay on top of my condition."
-  },
-  {
-    name: "John Karanja", 
-    role: "IT Consultant",
-    location: "Westlands, Nairobi",
-    avatar: kenyanAvatars[1],
-    rating: 5,
-    content: "As a busy professional in Westlands, having my health data accessible through CareFlow Vision gives me peace of mind during my hectic schedule."
-  },
-  {
-    name: "Grace Mwadzoya",
-    role: "Teacher",
-    location: "Karen, Nairobi",
-    avatar: kenyanAvatars[2], 
-    rating: 5,
-    content: "The doctor-patient communication feature helped me tremendously during my pregnancy. The appointment reminders were lifesavers!"
-  },
-  {
-    name: "David Omondi",
-    role: "Business Owner",
-    location: "Eastleigh, Nairobi",
-    avatar: kenyanAvatars[3],
-    rating: 4,
-    content: "Accessing my family's medical records from my phone in Eastleigh has saved us countless trips to the clinic. The Swahili option is great!"
-  },
-  {
-    name: "Wanjiku Muthoni",
-    role: "Retiree",
-    location: "Runda, Nairobi", 
-    avatar: kenyanAvatars[4],
-    rating: 5,
-    content: "CareFlow Vision's voice reminders in Kikuyu help me take my pills on time. My daughter can check on my health remotely from Mombasa."
-  }
-];
+import { Star, Quote } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Testimonials = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
-
-  const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`h-5 w-5 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
-      />
-    ));
-  };
+  const testimonials = [
+    {
+      name: "Dr. Sarah Mitchell",
+      role: "Cardiologist, St. Mary's Hospital",
+      content: "This platform has revolutionized how we manage patient follow-ups. The automated reminder system has reduced our no-show rate by 40%, and the real-time monitoring capabilities have helped us catch critical issues early.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Maria Rodriguez",
+      role: "Patient - Diabetes Management",
+      content: "As someone managing diabetes, this platform keeps me connected with my healthcare team. The automated reminders help me stay on track with appointments, and I love being able to message my doctor directly.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Dr. James Chen",
+      role: "Internal Medicine, Metro Health",
+      content: "The AI-powered insights have been game-changing. We can now predict which patients need immediate attention and proactively schedule follow-ups. It's like having a smart assistant that never sleeps.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=faces"
+    },
+    {
+      name: "Jennifer Thompson",
+      role: "Patient - Post-Surgery Care",
+      content: "After my surgery, this platform made my recovery so much smoother. The video consultations saved me multiple trips to the hospital, and my doctor could monitor my progress in real-time.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=center"
+    },
+    {
+      name: "Dr. Amanda Foster",
+      role: "Emergency Medicine Director",
+      content: "The real-time patient monitoring has been crucial in our emergency department. We can track vital signs remotely and get alerts for any concerning changes. It's enhanced our response time significantly.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=entropy"
+    },
+    {
+      name: "Robert Kim",
+      role: "Patient - Chronic Care Management",
+      content: "Managing my chronic condition has never been easier. The platform reminds me of medications, tracks my symptoms, and keeps my care team informed. I feel more in control of my health.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=150&h=150&fit=crop&crop=center"
+    }
+  ];
 
   return (
-    <section id="testimonials" className="py-16 bg-gray-50">
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-            What <span className="text-blue-600">Kenyans Say</span> About CareFlow
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Trusted by Healthcare Professionals & Patients
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Real stories from patients across Nairobi's neighborhoods
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Join thousands of healthcare providers and patients who have transformed their care experience with our platform
           </p>
         </div>
 
-        {/* Mobile Carousel */}
-        <div className="md:hidden relative">
-          <div className="overflow-hidden">
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="w-full flex-shrink-0 px-2">
-                  <Card className="bg-white border-none shadow-lg h-full hover:shadow-xl transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex justify-center mb-4">
-                        {renderStars(testimonial.rating)}
-                      </div>
-                      <Quote className="h-8 w-8 text-blue-500 mx-auto mb-4 opacity-50" />
-                      <p className="text-gray-700 mb-6 italic text-center">
-                        "{testimonial.content}"
-                      </p>
-                      <div className="flex flex-col items-center">
-                        <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100 hover:border-blue-300 transition-colors">
-                          <AvatarImage 
-                            src={testimonial.avatar} 
-                            alt={`${testimonial.name}'s profile`}
-                          />
-                          <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
-                            {testimonial.name.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <h4 className="font-semibold text-gray-900 text-center hover:text-blue-600 transition-colors">
-                          {testimonial.name}
-                        </h4>
-                        <p className="text-blue-600 text-sm text-center hover:text-blue-700 transition-colors">
-                          {testimonial.role}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1 flex items-center hover:text-gray-700 transition-colors">
-                          <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                          </svg>
-                          {testimonial.location}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={prevTestimonial}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 hover:scale-110 transition-all"
-          >
-            <ChevronLeft className="h-5 w-5 text-blue-600" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={nextTestimonial}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white shadow-md hover:bg-gray-100 hover:scale-110 transition-all"
-          >
-            <ChevronRight className="h-5 w-5 text-blue-600" />
-          </Button>
-
-          <div className="flex justify-center mt-6 space-x-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentIndex ? 'bg-blue-600 w-3.5' : 'bg-gray-300 hover:bg-gray-400'}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop Grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card 
-              key={index}
-              className="bg-white border-none shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full"
-            >
-              <CardContent className="p-6 h-full flex flex-col">
-                <div className="flex justify-center mb-3">
-                  {renderStars(testimonial.rating)}
-                </div>
-                <Quote className="h-7 w-7 text-blue-500 mx-auto mb-4 opacity-50 hover:opacity-70 transition-opacity" />
-                <p className="text-gray-700 mb-6 italic text-center flex-grow hover:text-gray-800 transition-colors">
-                  "{testimonial.content}"
-                </p>
-                <div className="flex flex-col items-center">
-                  <Avatar className="h-14 w-14 mb-3 border-2 border-blue-100 hover:border-blue-300 transition-colors">
-                    <AvatarImage 
-                      src={testimonial.avatar} 
-                      alt={`${testimonial.name}'s profile`}
+            <Card key={index} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="relative">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-16 h-16 rounded-full object-cover ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all duration-300"
                     />
-                    <AvatarFallback className="bg-blue-100 text-blue-800 font-medium">
-                      {testimonial.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h4 className="font-semibold text-gray-900 text-center hover:text-blue-600 transition-colors">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-blue-600 text-sm text-center hover:text-blue-700 transition-colors">
-                    {testimonial.role}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 flex items-center hover:text-gray-700 transition-colors">
-                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                    {testimonial.location}
+                    <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white"></div>
+                  </div>
+                  <div className="ml-4 flex-1">
+                    <h4 className="font-semibold text-gray-900 text-lg">{testimonial.name}</h4>
+                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+
+                <div className="relative">
+                  <Quote className="absolute top-0 left-0 w-8 h-8 text-blue-200 transform -translate-x-2 -translate-y-2" />
+                  <p className="text-gray-700 leading-relaxed italic pl-6">
+                    "{testimonial.content}"
                   </p>
                 </div>
               </CardContent>
@@ -237,14 +96,43 @@ const Testimonials = () => {
           ))}
         </div>
 
+        {/* Stats Section */}
+        <div className="mt-20 bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
+              <div className="text-gray-600">Active Patients</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
+              <div className="text-gray-600">Healthcare Providers</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-purple-600 mb-2">94%</div>
+              <div className="text-gray-600">Follow-up Success Rate</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">40%</div>
+              <div className="text-gray-600">Reduction in No-shows</div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
         <div className="mt-16 text-center">
-          <p className="text-gray-500 text-sm mb-2">TRUSTED BY HEALTHCARE PROVIDERS ACROSS</p>
-          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
-            {['Nairobi Hospital', 'Aga Khan', 'MP Shah', 'Kenyatta National', 'Gertrudes'].map((name) => (
-              <div key={name} className="text-gray-700 font-medium hover:text-blue-600 transition-colors">
-                {name}
-              </div>
-            ))}
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            Ready to Transform Your Healthcare Experience?
+          </h3>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Join the growing community of healthcare professionals and patients who are experiencing better outcomes with our platform.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+              Start Free Trial
+            </button>
+            <button className="px-8 py-3 border-2 border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+              Schedule Demo
+            </button>
           </div>
         </div>
       </div>

@@ -107,8 +107,28 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right Content - Dashboard Preview */}
+          {/* Right Content - Healthcare Professional Image & Dashboard Preview */}
           <div className="relative animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            {/* Healthcare Professional Image */}
+            <div className="relative mb-6">
+              <img 
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop&crop=face"
+                alt="Healthcare professional using digital technology"
+                className="w-full h-80 object-cover rounded-2xl shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl" />
+              
+              {/* Feature badges on image */}
+              <div className="absolute bottom-4 left-4 flex gap-2">
+                <Badge className="bg-white/90 text-blue-600 hover:bg-white">
+                  Real-time Monitoring
+                </Badge>
+                <Badge className="bg-white/90 text-green-600 hover:bg-white">
+                  AI Predictions
+                </Badge>
+              </div>
+            </div>
+
             <div className="relative">
               {/* Main Dashboard Card */}
               <div className="glass-effect rounded-2xl p-6 shadow-2xl">
