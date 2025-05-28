@@ -3,7 +3,7 @@
 
 A modern, secure, and user-friendly medical dashboard application built with React, TypeScript, and Supabase. This platform provides separate interfaces for patients and doctors, enabling efficient healthcare management with real-time communication, appointment scheduling, and secure medical record handling.
 
-#Prompt documentation link
+# Prompt documentation link
 Below is the prompt documentation link (https://docs.google.com/document/d/1ANolIWA1Rvu4S_omQFP2qFu98tL2L0Fi-YRAB1OkNvE/edit?tab=t.0)
 
 ## 🏥 Project Overview
