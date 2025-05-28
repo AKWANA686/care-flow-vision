@@ -14,6 +14,9 @@ interface UserProfile {
   gender: string | null;
   emergency_contact_name: string | null;
   emergency_contact_phone: string | null;
+  medical_license_number: string | null;
+  specialization: string | null;
+  department: string | null;
 }
 
 export const useEnhancedAuth = () => {
@@ -21,7 +24,7 @@ export const useEnhancedAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isOnline, setIsOnline] = useState(navigator.onlineState !== false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine !== false);
   const { toast } = useToast();
 
   useEffect(() => {
