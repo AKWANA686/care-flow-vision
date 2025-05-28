@@ -25,7 +25,7 @@ const Header = () => {
           <div className="flex items-center space-x-2">
             <div className="w-10 h-10 rounded-xl overflow-hidden">
               <img 
-                src="https://chatgpt.com/s/m_68366ee95e6c8191a768939524f409fd" 
+                src="https://jmp.sh/rSUpgNv5" 
                 alt="CareFlow Vision Logo"
                 className="w-full h-full object-cover"
                 onError={(e) => {
